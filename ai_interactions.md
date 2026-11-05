@@ -1,10 +1,75 @@
 # AI Interactions Log
 
-> **Stretch features only.** Only fill in the sections that apply to stretch features you attempted. If you did not attempt a stretch feature, leave its section blank or delete it. This file is not required for the core project.
+This file has two parts. The first covers the **final project (VibeFinder 2.0)**: the agent's own intermediate reasoning traces (Agentic Workflow Enhancement stretch) and how I used an AI coding assistant. The second keeps the Module 3 entries for history.
 
 ---
 
-## Agentic Workflow (SF8)
+## Final Project: Agent Reasoning Traces (Agentic Workflow Enhancement)
+
+VibeFinder 2.0 runs every request through a fixed chain of steps (`src/agent.py`):
+**guard → parse → validate → retrieve → augment → rank → confidence → explain → verify**.
+Each step appends an entry to the result's `trace`. The CLI prints it with `--trace`, and every run is appended to `logs/traces.jsonl` as one JSON line.
+
+The decision points are:
+
+- **parse:** use Gemini, or fall back to the rule parser if the LLM is off or returns bad JSON.
+- **augment:** if the request names an activity but not a mood or energy, take those from the retrieved activity note.
+- **confidence:** if the score is below 0.5, flag the answer and ask the human for more detail.
+- **verify:** if the LLM's explanation names a song that was not retrieved, retry once with the verifier's complaint in the prompt, then fall back to the template.
+
+### Trace 1: RAG fills in what the user left out
+
+`python -m src.app --offline --trace "music for sleeping"`
+
+The user named only an activity. The retriever pulled `activities.md > sleep`, and the agent filled in mood, energy and acoustic preference from that note:
+
+```
+  - guard: {"passed": true}
+  - parse: {"source": "rules", "raw": {"activity": "sleep"}}
+  - validate: {"prefs": {"activity": "sleep"}, "warnings": []}
+  - retrieve: {"notes": ["activities.md > sleep"]}
+  - augment: {"filled_from_notes": ["mood=chill", "energy=0.2", "likes_acoustic=True"], "related_genres": ["ambient", "classical", "lofi"]}
+  - rank: {"top": [["Spacewalk Thoughts", 3.84], ["Library Rain", 3.71], ["Midnight Coding", 3.52], ["Focus Flow", 3.09], ["Moonlit Sonata Redux", 2.96]]}
+  - confidence: {"score": 0.87, "threshold": 0.5}
+  - explain: {"source": "template", "elapsed_ms": 19}
+```
+
+Without retrieval (`--no-rag`), the same request stops at "needs clarification", because nothing usable was parsed.
+
+### Trace 2: the verifier catches a hallucinated song (simulated LLM)
+
+This run used the `FakeClient` from `tests/test_agent.py` in place of Gemini, so the failure is reproducible. The parse call returns nothing, and both explanation attempts invent a song:
+
+```
+  - parse: {"source": "rules", "raw": {"genre": "pop", "mood": "happy", "activity": "road trip"}}
+  - retrieve: {"notes": ["activities.md > road trip", "genres.md > pop"]}
+  - augment: {"filled_from_notes": ["energy=0.75", "likes_acoustic=False"], "related_genres": ["indie pop", "k-pop", "edm"]}
+  - rank: {"top": [["Sunrise City", 4.8], ["Rooftop Lights", 3.81], ["Starlight Sprint", 3.75], ["Gym Hero", 3.71], ["Laser Bloom", 3.18]]}
+  - confidence: {"score": 0.98, "threshold": 0.5}
+  - verify: {"attempt": 1, "passed": false, "problems": ["'Song That Does Not Exist' was not in the retrieved songs", "top-ranked song 'Sunrise City' was left out"]}
+  - verify: {"attempt": 2, "passed": false, "problems": ["'Song That Does Not Exist' was not in the retrieved songs", "top-ranked song 'Sunrise City' was left out"]}
+  - explain: {"source": "template", "elapsed_ms": 2}
+```
+
+The user still gets the correct ranked list, built from the scoring reasons, plus a warning that the AI explanation was replaced. The same scenario is an automated test: `test_hallucinated_llm_explanation_is_retried_then_replaced`.
+
+### Trace 3: live Gemini run
+
+<!-- TODO: after adding GEMINI_API_KEY to .env, run
+     python -m src.app --trace "something calm to study to, I like acoustic"
+     and paste the output here. -->
+
+---
+
+## Final Project: How I Used an AI Coding Assistant
+
+I used Claude Code (desktop app) as a pair programmer. I pasted in the assignment and chose the Module 3 Music Recommender as the base project. The assistant proposed the architecture (knowledge-base RAG, an agent pipeline with a verifier, confidence scoring and an evaluation harness), wrote the first version of the code, tests and docs, and ran everything to collect the evidence in `assets/sample_runs.txt` and `eval/`. My accepted and rejected suggestions are in `model_card.md`.
+
+---
+
+# Module 3 History
+
+### Agentic Workflow (SF8)
 
 > Document your experience using an AI agent (e.g., Cursor Agent, Claude, Copilot) to make multi-step changes autonomously.
 
@@ -35,7 +100,7 @@ I used Claude Code (the desktop app's Code tab) as an agent to build the core pr
 
 ---
 
-## Design Pattern (SF10)
+### Design Pattern (SF10)
 
 > Document how AI helped you choose or implement a design pattern.
 

@@ -1,0 +1,27 @@
+flowchart TD
+    U([User request<br/>"upbeat pop for a road trip"]) --> G{Guardrail:<br/>check_request}
+    G -- empty / too long / injection --> R([Rejected with reason])
+    G -- ok --> P[Parser<br/>Gemini JSON parse]
+    P -- LLM off or fails --> PR[Rule-based parser fallback]
+    P --> V{Guardrail:<br/>validate_prefs}
+    PR --> V
+    V --> RET[Retriever<br/>knowledge.py]
+    KB[(Knowledge base<br/>genres.md + activities.md)] --> RET
+    RET --> AUG[Augment prefs<br/>fill gaps from activity note<br/>related genres from genre note]
+    CAT[(Song catalog<br/>songs.csv)] --> RANK
+    AUG --> RANK[Ranker<br/>score_song + related-genre credit]
+    RANK --> CONF{Confidence score<br/>coverage + fit}
+    CONF -- below 0.5 --> HITL([Human in the loop:<br/>ask user to clarify])
+    HITL -. extra details .-> U
+    CONF --> EXP[Explainer<br/>Gemini writes picks<br/>from retrieved songs + notes]
+    EXP --> VER{Verifier:<br/>only retrieved titles?<br/>top song included?}
+    VER -- fail, retry once with feedback --> EXP
+    VER -- fails twice / no LLM --> TPL[Template explanation<br/>from scoring reasons]
+    VER -- pass --> OUT([Ranked songs + explanation + confidence])
+    TPL --> OUT
+
+    LOG[[Logging: logs/vibefinder.log<br/>traces: logs/traces.jsonl]]
+    OUT -.-> LOG
+    TEST[[pytest suite + eval/run_eval.py<br/>13 fixed cases, pass/fail summary]] -.checks.-> RANK
+    TEST -.checks.-> VER
+    TEST -.checks.-> G
