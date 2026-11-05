@@ -111,7 +111,7 @@ def test_llm_explanation_is_used_when_it_passes_verification():
     )
     agent.client = client
     result = agent.run("rock for the gym")
-    assert result.parser_source == "llm"
+    assert result.parser_source == "llm-few-shot"
     assert result.explanation_source == "llm"
     assert result.explanation["intro"] == "Loud picks for lifting."
 
@@ -125,3 +125,39 @@ def test_hallucinated_llm_explanation_is_retried_then_replaced():
     assert result.parser_source == "rules"
     assert result.explanation_source == "template"
     assert "rejected because" in client.prompts[-1]   # retry prompt carried the verifier's feedback
+
+
+# ---------------------------------------------------------------- few-shot specialization
+def test_few_shot_prompt_includes_train_examples_and_zero_shot_does_not(kb):
+    from src.parser import parse_with_llm
+
+    few, zero = FakeClient({}), FakeClient({})
+    parse_with_llm("moody synthwave", kb, {"moody"}, few, few_shot=True)
+    parse_with_llm("moody synthwave", kb, {"moody"}, zero, few_shot=False)
+    assert "anything but country, just something chill" in few.prompts[0]
+    assert "anything but country" not in zero.prompts[0]
+
+
+def test_parse_dataset_train_and_test_do_not_overlap():
+    from src.parser import load_examples
+
+    train = {ex["request"] for ex in load_examples("train")}
+    test = {ex["request"] for ex in load_examples("test")}
+    assert len(train) >= 5 and len(test) >= 15
+    assert not train & test
+
+
+def test_parse_eval_scoring_rules():
+    from eval.parse_eval import field_correct
+
+    assert field_correct("energy", 0.8, 0.95)            # within 0.2
+    assert not field_correct("energy", 0.5, 0.95)
+    assert not field_correct("energy", 0.3, None)        # guessing energy when none was asked
+    assert field_correct("genre", None, None)
+    assert not field_correct("genre", "edm", None)       # negated genre must stay null
+
+
+def test_agent_reports_which_parse_prompt_was_used():
+    client = FakeClient({"genre": "rock"}, None, None)
+    result = VibeFinderAgent(client=client, few_shot=False).run("rock")
+    assert result.parser_source == "llm-zero-shot"
