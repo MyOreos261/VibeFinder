@@ -82,6 +82,21 @@ python -m src.app --no-rag "..."                       # baseline without retrie
 python -m src.main                                     # the original Module 3 runner still works
 ```
 
+**Web app:**
+
+```bash
+streamlit run app_web.py      # opens http://localhost:8501
+```
+
+The web app uses the same agent as the CLI and adds:
+
+- **Example chips** that fill in common requests.
+- **A color-coded confidence banner.** It turns red for low confidence and shows an "Add details" box, so the human-in-the-loop step happens on the page.
+- **Song cards** with energy and acoustic bars. A 🔍 marks any reasons that came from the knowledge notes.
+- **👍/👎 ratings**, saved to `logs/feedback.jsonl` as human-evaluation data.
+- **A "How I decided" panel** showing the parsed preferences, retrieved notes and the full agent trace.
+- **Sidebar toggles for Gemini and RAG**, so you can compare against the baseline live. For example, "music for sleeping" needs clarification with RAG off and returns confidence 0.87 with RAG on.
+
 **Test it:**
 
 ```bash
@@ -244,6 +259,7 @@ The big lesson was where to put the AI. My first instinct was to let the LLM pic
 ## Repository Layout
 
 ```
+app_web.py        Streamlit web app
 src/
   app.py          CLI + interactive mode, logging, trace saving
   agent.py        orchestrator (guard -> parse -> validate -> retrieve -> augment -> rank -> confidence -> explain -> verify)

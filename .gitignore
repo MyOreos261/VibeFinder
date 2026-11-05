@@ -19,3 +19,6 @@ venv/
 
 # Runtime logs (sample evidence lives in assets/)
 logs/
+
+# Local editor/agent config
+.claude/
