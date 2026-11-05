@@ -46,7 +46,7 @@ If this grew into a real product, the knowledge notes would need review by more 
 
 ## 5. Testing and Reliability Results
 
-- **Unit and integration tests:** `pytest` runs 20 tests, all passing. They cover the guardrails, the parser, retrieval, offline end-to-end runs, and the LLM path through a fake client, including a hallucinating one.
+- **Unit and integration tests:** `pytest` runs 24 tests, all passing. They cover the guardrails, the parser, retrieval, offline end-to-end runs, the LLM path through a fake client (including a hallucinating one), and the few-shot prompt and dataset.
 - **Evaluation harness:** `python -m eval.run_eval` runs 13 fixed cases.
 
 | Mode | Passed | Avg confidence (answered) |
@@ -54,6 +54,8 @@ If this grew into a real product, the knowledge notes would need review by more 
 | Offline, with RAG | **13 / 13** | 0.85 |
 | Offline, no RAG (baseline) | 11 / 13 | 0.74 |
 | Gemini, with RAG | _TODO: run `python -m eval.run_eval --llm`_ | |
+
+**Specialization (few-shot parsing):** on 20 held-out requests, the rule-based parser gets 94% field accuracy and 75% exact match (`python -m eval.parse_eval`). Gemini zero-shot vs. few-shot: _TODO: run `python -m eval.parse_eval --llm`_. Details are in the README's stretch-features section and in [eval/results_parse.md](eval/results_parse.md).
 
 Without retrieval, the system fails "music for sleeping" (nothing to parse) and "pop music" (indie pop and k-pop never surface). Full tables are in [eval/results_offline.md](eval/results_offline.md) and [eval/results_offline-norag.md](eval/results_offline-norag.md).
 

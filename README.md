@@ -11,11 +11,11 @@ This project extends my **Module 3 project, the Music Recommender Simulation (Vi
 | | VibeFinder 1.0 (Module 3) | VibeFinder 2.0 |
 | --- | --- | --- |
 | Input | hard-coded profile dicts | free-text requests (CLI or interactive) |
-| Parsing | none | Gemini JSON parsing, with a rule-based fallback |
+| Parsing | none | Gemini JSON parsing, specialized with few-shot examples, plus a rule-based fallback |
 | Knowledge | only the song CSV | **RAG** over genre and activity notes |
 | Ranking | exact genre/mood matches | adds related-genre and related-mood credit from the notes |
 | Trust | none | guardrails, a confidence score, an LLM output verifier, logging, human-in-the-loop clarification |
-| Testing | 4 unit tests | 20 tests plus a 13-case evaluation harness with a RAG vs. no-RAG comparison |
+| Testing | 4 unit tests | 24 tests, a 13-case evaluation harness with a RAG vs. no-RAG comparison, and a parse-accuracy eval |
 
 ## Architecture Overview
 
@@ -100,10 +100,12 @@ The web app uses the same agent as the CLI and adds:
 **Test it:**
 
 ```bash
-pytest                          # 20 tests
+pytest                          # 24 tests
 python -m eval.run_eval         # 13-case evaluation, offline
 python -m eval.run_eval --no-rag
 python -m eval.run_eval --llm   # needs GEMINI_API_KEY
+python -m eval.parse_eval       # parse accuracy: rules baseline
+python -m eval.parse_eval --llm # rules vs. Gemini zero-shot vs. few-shot
 ```
 
 ## Sample Interactions
@@ -209,7 +211,7 @@ More traces, including the verifier catching a hallucinated song, are in [ai_int
 
 ## Testing Summary
 
-- **`pytest`: 20/20 pass.** This covers the 4 original Module 3 tests plus 16 new ones for guardrails, the parser, retrieval, offline end-to-end runs, and the LLM path with a fake client (one that passes verification and one that hallucinates).
+- **`pytest`: 24/24 pass.** This covers the 4 original Module 3 tests plus 20 new ones for guardrails, the parser, retrieval, offline end-to-end runs, the LLM path with a fake client (one that passes verification and one that hallucinates), and the few-shot prompt and dataset.
 - **Evaluation harness: 13/13 pass with RAG, 11/13 without.** Average confidence is 0.85 with RAG and 0.74 without. Full tables are in [eval/results_offline.md](eval/results_offline.md) and [eval/results_offline-norag.md](eval/results_offline-norag.md).
 
 ```
@@ -243,6 +245,22 @@ Summary: 13/13 passed; average confidence 0.85 over 9 answered requests
 - **RAG Enhancement:** two custom document sources (genre notes and activity notes) on top of the song catalog. There's a before/after comparison above, and the RAG vs. no-RAG eval tables are in `eval/`.
 - **Agentic Workflow Enhancement:** a 9-step decision chain with a fallback parser, a self-check verifier with a feedback retry, and human-in-the-loop clarification. Traces are in [ai_interactions.md](ai_interactions.md).
 - **Test Harness:** `eval/run_eval.py` prints pass/fail and confidence for each case, plus a summary.
+- **Fine-Tuning / Specialization (few-shot):** Gemini's parser is specialized with 8 hand-labeled examples from [data/parse_examples.json](data/parse_examples.json). The examples teach VibeFinder's house rules:
+  - set energy only from explicit energy words, and leave activity-based energy to the knowledge notes;
+  - turn negated genres ("anything but country") into `null`;
+  - use `null` rather than guessing.
+
+  `eval/parse_eval.py` scores parsers field by field on 20 separate held-out requests (no overlap with the examples, which a test checks). Compare with `--zero-shot` in the CLI or the **Few-shot parsing** toggle in the web app.
+
+  | Parser | genre | mood | energy | likes_acoustic | activity | Field accuracy | Exact match |
+  | --- | --- | --- | --- | --- | --- | --- | --- |
+  | rules (baseline) | 90% | 100% | 95% | 95% | 90% | 94% | 75% |
+  | Gemini zero-shot | _TODO_ | | | | | | |
+  | Gemini few-shot | _TODO_ | | | | | | |
+
+  <!-- TODO: run `python -m eval.parse_eval --llm` after adding GEMINI_API_KEY and paste its table here. -->
+
+  The rule baseline's misses are mostly negation ("something chill but not lofi" is parsed as lofi; "anything except edm" is parsed as edm) and phrasings it has no rule for ("falling asleep", "nothing acoustic", "the heavier the better").
 
 ## Reflection
 
