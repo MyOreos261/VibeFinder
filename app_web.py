@@ -148,6 +148,9 @@ def main() -> None:
                             help="Parse requests and write explanations with Gemini.")
         if client is None:
             st.caption("No GEMINI_API_KEY found, so the rule-based parser and template explanations are used.")
+        few_shot = st.toggle("Few-shot parsing", value=True, disabled=not use_llm,
+                             help="Show Gemini 8 labeled examples (data/parse_examples.json) when parsing. "
+                                  "Turn off for the plain zero-shot prompt.")
         use_rag = st.toggle("Use RAG (knowledge notes)", value=True,
                             help="Turn off to see the baseline recommender without retrieval.")
         k = st.slider("Number of songs", 3, 8, 5)
@@ -176,7 +179,8 @@ def main() -> None:
         st.info("Type a request or pick an example above.")
         return
 
-    agent = VibeFinderAgent(songs=songs, kb=kb, client=client if use_llm else None, use_rag=use_rag, k=k)
+    agent = VibeFinderAgent(songs=songs, kb=kb, client=client if use_llm else None, use_rag=use_rag, k=k,
+                            few_shot=few_shot)
     with st.spinner("Finding your vibe..."):
         result = agent.run(request)
     save_trace(result)
@@ -206,7 +210,7 @@ def main() -> None:
     if result.recommendations:
         st.subheader(result.explanation["intro"])
         st.caption(f"Explanation written by: {'Gemini (verified)' if result.explanation_source == 'llm' else 'scoring reasons (template)'}"
-                   f" · Request parsed by: {'Gemini' if result.parser_source == 'llm' else 'rules'}")
+                   f" · Request parsed by: {'Gemini (' + result.parser_source[4:] + ')' if result.parser_source.startswith('llm') else 'rules'}")
         whys = {p["title"].lower(): p["why"] for p in result.explanation["picks"]}
         per_row = 4 if k > 5 else k
         recs = result.recommendations

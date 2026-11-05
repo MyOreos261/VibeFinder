@@ -103,6 +103,8 @@ def main(argv=None) -> int:
     parser.add_argument("--offline", action="store_true", help="do not call the LLM")
     parser.add_argument("--no-rag", action="store_true", help="baseline: skip knowledge retrieval")
     parser.add_argument("--trace", action="store_true", help="print the agent trace")
+    parser.add_argument("--zero-shot", action="store_true",
+                        help="parse with the plain prompt instead of the few-shot specialized one")
     parser.add_argument("-k", type=int, default=5, help="number of songs to return")
     args = parser.parse_args(argv)
 
@@ -120,7 +122,7 @@ def main(argv=None) -> int:
     if client is None and not args.offline:
         print("(LLM unavailable: running with the rule-based parser and template explanations. "
               "Set GEMINI_API_KEY in .env to enable Gemini.)\n")
-    agent = VibeFinderAgent(client=client, use_rag=not args.no_rag, k=args.k)
+    agent = VibeFinderAgent(client=client, use_rag=not args.no_rag, k=args.k, few_shot=not args.zero_shot)
 
     if not args.request:
         interactive(agent, args.trace)

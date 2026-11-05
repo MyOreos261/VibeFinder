@@ -45,18 +45,19 @@ class AgentResult:
     confidence: float = 0.0
     explanation: Optional[Dict] = None
     explanation_source: str = ""              # llm | template
-    parser_source: str = ""                   # llm | rules
+    parser_source: str = ""                   # llm-few-shot | llm-zero-shot | rules
     trace: List[Dict] = field(default_factory=list)
 
 
 class VibeFinderAgent:
     def __init__(self, songs: Optional[List[Dict]] = None, kb: Optional[KnowledgeBase] = None,
-                 client=None, use_rag: bool = True, k: int = 5):
+                 client=None, use_rag: bool = True, k: int = 5, few_shot: bool = True):
         self.songs = songs if songs is not None else load_songs(str(SONGS_CSV), verbose=False)
         self.kb = kb or KnowledgeBase.load()
         self.client = client
         self.use_rag = use_rag
         self.k = k
+        self.few_shot = few_shot
         self.catalog_genres = {s["genre"] for s in self.songs}
         self.catalog_moods = {s["mood"] for s in self.songs}
 
@@ -68,9 +69,9 @@ class VibeFinderAgent:
 
     def _parse(self, request: str, result: AgentResult) -> Dict:
         if self.client is not None:
-            raw = parse_with_llm(request, self.kb, self.catalog_moods, self.client)
+            raw = parse_with_llm(request, self.kb, self.catalog_moods, self.client, few_shot=self.few_shot)
             if raw is not None:
-                result.parser_source = "llm"
+                result.parser_source = "llm-few-shot" if self.few_shot else "llm-zero-shot"
                 return raw
             result.warnings.append("LLM parsing failed; used the rule-based parser.")
         result.parser_source = "rules"
