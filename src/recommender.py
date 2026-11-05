@@ -79,7 +79,7 @@ class Recommender:
         score, reasons = score_song(user.to_prefs(), asdict(song))
         return f"Score {score:.2f}: " + "; ".join(reasons)
 
-def load_songs(csv_path: str) -> List[Dict]:
+def load_songs(csv_path: str, verbose: bool = True) -> List[Dict]:
     """Read the songs CSV into a list of dicts, converting numeric columns to numbers."""
     songs = []
     with open(csv_path, newline="", encoding="utf-8") as f:
@@ -87,7 +87,8 @@ def load_songs(csv_path: str) -> List[Dict]:
             for field, cast in NUMERIC_FIELDS.items():
                 row[field] = cast(row[field])
             songs.append(row)
-    print(f"Loaded songs: {len(songs)}")
+    if verbose:
+        print(f"Loaded songs: {len(songs)}")
     return songs
 
 def score_song(user_prefs: Dict, song: Dict, weights: Optional[Dict] = None) -> Tuple[float, List[str]]:

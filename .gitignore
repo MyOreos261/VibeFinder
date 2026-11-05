@@ -13,3 +13,9 @@ venv/
 
 # Pytest cache
 .pytest_cache/
+
+# Secrets
+.env
+
+# Runtime logs (sample evidence lives in assets/)
+logs/
