@@ -7,9 +7,10 @@ flowchart TD
     PR --> V
     V --> RET[Retriever<br/>knowledge.py]
     KB[(Knowledge base<br/>genres.md + activities.md)] --> RET
-    RET --> AUG[Augment prefs<br/>fill gaps from activity note<br/>related genres from genre note]
+    SG[(Song guide PDF<br/>one chunk per song)] --> RET
+    RET --> AUG[Augment prefs<br/>copy a named song's features<br/>fill gaps from activity note<br/>related genres from genre note]
     CAT[(Song catalog<br/>songs.csv)] --> RANK
-    AUG --> RANK[Ranker<br/>score_song + related-genre credit]
+    AUG --> RANK[Ranker<br/>score_song + related-genre credit<br/>+ sound matches from song guide]
     RANK --> CONF{Confidence score<br/>coverage + fit}
     CONF -- below 0.5 --> HITL([Human in the loop:<br/>ask user to clarify])
     HITL -. extra details .-> U
@@ -22,6 +23,6 @@ flowchart TD
 
     LOG[[Logging: logs/vibefinder.log<br/>traces: logs/traces.jsonl]]
     OUT -.-> LOG
-    TEST[[pytest suite + eval/run_eval.py<br/>13 fixed cases, pass/fail summary]] -.checks.-> RANK
+    TEST[[pytest suite + eval/run_eval.py<br/>15 fixed cases, pass/fail summary]] -.checks.-> RANK
     TEST -.checks.-> VER
     TEST -.checks.-> G
