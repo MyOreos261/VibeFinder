@@ -53,9 +53,9 @@ If this grew into a real product, the knowledge notes would need review by more 
 | --- | --- | --- |
 | Offline, with RAG | **13 / 13** | 0.85 |
 | Offline, no RAG (baseline) | 11 / 13 | 0.74 |
-| Gemini, with RAG | _TODO: run `python -m eval.run_eval --llm`_ | |
+| Gemini, with RAG | **13 / 13** | 0.85 (9/9 LLM explanations passed verification; 19 API calls, 0 failed after retries) |
 
-**Specialization (few-shot parsing):** on 20 held-out requests, the rule-based parser gets 94% field accuracy and 75% exact match (`python -m eval.parse_eval`). Gemini zero-shot vs. few-shot: _TODO: run `python -m eval.parse_eval --llm`_. Details are in the README's stretch-features section and in [eval/results_parse.md](eval/results_parse.md).
+**Specialization (few-shot parsing):** on 20 held-out requests, the rule-based parser gets 94% field accuracy and 75% exact match (`python -m eval.parse_eval`). Gemini goes from **67% field accuracy and 15% exact match zero-shot to 88% and 60% few-shot**. The biggest gains are on energy (40% → 80%) and acoustic preference (50% → 85%), because the examples teach it not to guess those from the activity. Details are in the README's stretch-features section and in [eval/results_parse.md](eval/results_parse.md).
 
 Without retrieval, the system fails "music for sleeping" (nothing to parse) and "pop music" (indie pop and k-pop never surface). Full tables are in [eval/results_offline.md](eval/results_offline.md) and [eval/results_offline-norag.md](eval/results_offline-norag.md).
 

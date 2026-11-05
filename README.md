@@ -103,7 +103,7 @@ The web app uses the same agent as the CLI and adds:
 pytest                          # 24 tests
 python -m eval.run_eval         # 13-case evaluation, offline
 python -m eval.run_eval --no-rag
-python -m eval.run_eval --llm   # needs GEMINI_API_KEY
+python -m eval.run_eval --llm   # needs GEMINI_API_KEY (13/13 pass, 0 failed API calls)
 python -m eval.parse_eval       # parse accuracy: rules baseline
 python -m eval.parse_eval --llm # rules vs. Gemini zero-shot vs. few-shot
 ```
@@ -198,8 +198,29 @@ Agent trace:
 
 More traces, including the verifier catching a hallucinated song, are in [ai_interactions.md](ai_interactions.md).
 
-<!-- TODO: once GEMINI_API_KEY is set, add one live Gemini run here, e.g.
-     python -m src.app "something calm to study to, I like acoustic"   -->
+**6. Live Gemini run: few-shot parsing plus a verified explanation**
+
+```
+$ python -m src.app "something calm to study to, I like acoustic"
+Request: something calm to study to, I like acoustic
+Parsed (llm-few-shot): mood=chill, energy=0.2, likes_acoustic=True, activity=studying
+Retrieved notes: activities.md > studying
+Confidence: 0.87
+
+Since you are looking for calm, acoustic study music, here are five picks ranked from best match to weakest fit based on your preferences and study needs.  (explanation: llm)
+1. Spacewalk Thoughts by Orbit Bloom  [ambient/chill, energy 0.28]  score 3.84
+   This is our top recommendation because it hits your exact chill mood, features a very low energy level close to your target, and has a strong acoustic sound.
+2. Library Rain by Paper Lanterns  [lofi/chill, energy 0.35]  score 3.71
+   A great lofi choice for studying that matches your chill mood preference, offers high acousticness, and stays at a steady, low energy level.
+3. Midnight Coding by LoRoom  [lofi/chill, energy 0.42]  score 3.52
+   Another solid lofi study track that fits the chill vibe well, though its energy is slightly further from your ideal target.
+4. Coffee Shop Stories by Slow Stereo  [jazz/relaxed, energy 0.37]  score 3.19
+   While it lacks an exact mood match, it brings a relaxed jazz vibe and a high acousticness that still works nicely for background study music.
+5. Focus Flow by LoRoom  [lofi/focused, energy 0.40]  score 3.09
+   This is a weaker fit because it leans into a focused mood rather than chill, and its energy is higher than what you asked for, making it less ideal despite the acoustic elements.
+```
+
+Gemini parsed the request using the few-shot prompt (`llm-few-shot`), and its explanation passed the verifier on the first attempt (`verify: passed=true`). It also flagged its own weakest pick honestly ("This is a weaker fit..."). The full output with the trace is in [assets/sample_run_gemini.txt](assets/sample_run_gemini.txt).
 
 ## Design Decisions
 
@@ -255,10 +276,15 @@ Summary: 13/13 passed; average confidence 0.85 over 9 answered requests
   | Parser | genre | mood | energy | likes_acoustic | activity | Field accuracy | Exact match |
   | --- | --- | --- | --- | --- | --- | --- | --- |
   | rules (baseline) | 90% | 100% | 95% | 95% | 90% | 94% | 75% |
-  | Gemini zero-shot | _TODO_ | | | | | | |
-  | Gemini few-shot | _TODO_ | | | | | | |
+  | Gemini zero-shot | 85% | 65% | 40% | 50% | 95% | 67% | 15% |
+  | **Gemini few-shot** | **95%** | **80%** | **80%** | **85%** | **100%** | **88%** | **60%** |
 
-  <!-- TODO: run `python -m eval.parse_eval --llm` after adding GEMINI_API_KEY and paste its table here. -->
+  **The few-shot examples raised Gemini's field accuracy from 67% to 88%, and its exact matches from 15% to 60%** (all 20 requests scored, no failed calls).
+  - The biggest gains are energy (40% → 80%) and acoustic preference (50% → 85%). Without examples, Gemini kept guessing an energy and an acoustic preference from the activity ("rap for lifting weights" became energy 0.9 and not acoustic). Those guesses would override the activity notes RAG is supposed to supply.
+  - Few-shot also handled both negation requests ("chill but not lofi", "anything except edm") that the rule parser gets wrong.
+  - The rule parser still scores highest overall (94%), but that's partly because I wrote its keyword lists and these labels together. It fails on negation and on any phrasing it has no rule for, while Gemini generalizes.
+
+  Full per-request misses are in [eval/results_parse.md](eval/results_parse.md).
 
   The rule baseline's misses are mostly negation ("something chill but not lofi" is parsed as lofi; "anything except edm" is parsed as edm) and phrasings it has no rule for ("falling asleep", "nothing acoustic", "the heavier the better").
 

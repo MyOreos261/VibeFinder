@@ -55,9 +55,22 @@ The user still gets the correct ranked list, built from the scoring reasons, plu
 
 ### Trace 3: live Gemini run
 
-<!-- TODO: after adding GEMINI_API_KEY to .env, run
-     python -m src.app --trace "something calm to study to, I like acoustic"
-     and paste the output here. -->
+`python -m src.app --trace "something calm to study to, I like acoustic"`, with real Gemini calls for parsing (few-shot) and the explanation:
+
+```
+Agent trace:
+  - guard: {"passed": true}
+  - parse: {"source": "llm-few-shot", "raw": {"genre": null, "mood": "chill", "energy": 0.2, "likes_acoustic": true, "activity": "studying"}}
+  - validate: {"prefs": {"mood": "chill", "energy": 0.2, "likes_acoustic": true, "activity": "studying"}, "warnings": []}
+  - retrieve: {"notes": ["activities.md > studying"]}
+  - augment: {"filled_from_notes": [], "related_genres": ["lofi", "ambient", "classical", "jazz"]}
+  - rank: {"top": [["Spacewalk Thoughts", 3.84], ["Library Rain", 3.71], ["Midnight Coding", 3.52], ["Coffee Shop Stories", 3.19], ["Focus Flow", 3.09]]}
+  - confidence: {"score": 0.87, "threshold": 0.5}
+  - verify: {"attempt": 1, "passed": true, "problems": []}
+  - explain: {"source": "llm", "elapsed_ms": 3769}
+```
+
+Gemini's few-shot parse set `energy=0.2` from the word "calm" and left `genre` null. The explanation passed the verifier on the first attempt, so the template fallback wasn't needed.
 
 ---
 
