@@ -61,8 +61,8 @@ Testing touches the system at three points. `pytest` checks guardrails, parsing,
 Requires Python 3.10+.
 
 ```bash
-git clone https://github.com/<your-username>/applied-ai-system-final.git
-cd applied-ai-system-final
+git clone https://github.com/MyOreos261/VibeFinder.git
+cd VibeFinder
 python -m venv .venv
 source .venv/bin/activate        # Mac/Linux/Git Bash
 .\.venv\Scripts\Activate.ps1     # Windows PowerShell
