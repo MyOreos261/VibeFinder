@@ -1,0 +1,697 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fswiss Helvetica;}}
+{\colortbl;\red75\green31\blue168;\red31\green122\blue114;\red120\green120\blue120;}
+\f0\fs20
+{\pard\sb0\sa80 \qc\b\fs48\cf1 VibeFinder Song Guide\par}
+{\pard\sb0\sa80 \qc\i\fs20\cf3 An in-depth knowledge document for retrieval-augmented music recommendations\par}
+{\pard\sb0\sa80 \qc\i\fs20\cf3 20 songs - 20 genre notes - 9 activity guides\par}
+{\pard\sb240\sa80 \b\fs32\cf1 About this document\par}
+{\pard\sb0\sa80 \fs20 This guide describes every song in the VibeFinder catalog (data/songs.csv) in depth: its sound, vocals, structure, lyric themes, when to play it and when to skip it, how it compares with similar songs, and direct answers to common questions. All songs and artists are fictional and were created for a classroom project. Feature values come directly from the catalog; activity playlists were produced by running the VibeFinder recommender itself, so this guide never contradicts the app.\par}
+{\pard\sb0\sa80 \fs20 How VibeFinder uses it: the retriever extracts the text and splits it into one chunk per song, from the line 'Song: <title>' to the line 'End of song: <title>'. When a request names a song ('songs like Storm Runner'), the agent copies that song's genre, mood and energy. When a request names a sound ('piano', 'fiddle', 'no vocals'), songs whose Sound or Vocals lines mention it get a bonus, and the matching sections are passed to the language model as evidence.\par}
+{\pard\sb0\sa80 \fs20 Contents: 1. Catalog at a glance - 2. Songs in depth - 3. Activity playlists - 4. Genre guide - 5. Mood map - 6. Glossary\par}
+\page
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 1: Catalog at a glance\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Title\tab Artist\tab Genre\tab Mood\tab Energy\tab BPM\tab Acoustic\tab Vocals}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Sunrise City\tab Neon Echo\tab pop\tab happy\tab 0.82\tab 118\tab 0.18\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Midnight Coding\tab LoRoom\tab lofi\tab chill\tab 0.42\tab 78\tab 0.71\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Storm Runner\tab Voltline\tab rock\tab intense\tab 0.91\tab 152\tab 0.10\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Library Rain\tab Paper Lanterns\tab lofi\tab chill\tab 0.35\tab 72\tab 0.86\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Gym Hero\tab Max Pulse\tab pop\tab intense\tab 0.93\tab 132\tab 0.05\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 6\tab Spacewalk Thoughts\tab Orbit Bloom\tab ambient\tab chill\tab 0.28\tab 60\tab 0.92\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 7\tab Coffee Shop Stories\tab Slow Stereo\tab jazz\tab relaxed\tab 0.37\tab 90\tab 0.89\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 8\tab Night Drive Loop\tab Neon Echo\tab synthwave\tab moody\tab 0.75\tab 110\tab 0.22\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 9\tab Focus Flow\tab LoRoom\tab lofi\tab focused\tab 0.40\tab 80\tab 0.78\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 10\tab Rooftop Lights\tab Indigo Parade\tab indie pop\tab happy\tab 0.76\tab 124\tab 0.35\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 11\tab Concrete Crown\tab Kilo Verse\tab hip-hop\tab confident\tab 0.78\tab 94\tab 0.12\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 12\tab Moonlit Sonata Redux\tab Clara Vey\tab classical\tab melancholy\tab 0.22\tab 66\tab 0.97\tab none\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 13\tab Iron Tempest\tab Graveforge\tab metal\tab angry\tab 0.97\tab 168\tab 0.03\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 14\tab Dusty Porch Swing\tab Willa Grange\tab country\tab nostalgic\tab 0.52\tab 102\tab 0.68\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 15\tab Velvet Hours\tab Sade Monroe\tab r&b\tab romantic\tab 0.48\tab 84\tab 0.40\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 16\tab Laser Bloom\tab Pulse Theory\tab edm\tab euphoric\tab 0.95\tab 128\tab 0.04\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 17\tab Island Postcard\tab Roots Harbor\tab reggae\tab relaxed\tab 0.55\tab 76\tab 0.45\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 18\tab Paper Boats\tab Juniper Hollow\tab folk\tab sad\tab 0.30\tab 88\tab 0.91\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 19\tab Crossroads Blue\tab Eddie Lark\tab blues\tab sad\tab 0.45\tab 70\tab 0.62\tab yes\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 20\tab Starlight Sprint\tab NOVA9\tab k-pop\tab happy\tab 0.88\tab 126\tab 0.10\tab yes\par}
+\page
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 2: Songs in depth\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Sunrise City\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Neon Echo\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} pop | {\b Mood:} happy\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.82 (very high) | {\b Tempo:} 118 BPM (moderate) | {\b Valence:} 0.84 (very high) | {\b Danceability:} 0.79 (high) | {\b Acousticness:} 0.18 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} A bright, sun-soaked pop anthem built on glossy synths, a bouncing bassline and a big sing-along chorus about leaving the city at dawn. It feels like windows-down optimism.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} glossy synth pads, bright synth lead, bouncing electric bass, punchy programmed drums, handclaps, layered backing vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} lead female vocal with a big multi-tracked sing-along chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} short synth intro, two verses, a pre-chorus that builds, a soaring chorus, a stripped-down bridge with just bass and vocals, and a final double chorus with extra harmonies\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Leaving the city at dawn with friends, the skyline turning gold, and the feeling that the whole day is still ahead.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} road trips, getting ready to go out, sunny mornings, any time you want an instant mood lift\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you need to concentrate or wind down; the chorus is designed to grab attention\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} party, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Starlight Sprint (k-pop), Rooftop Lights (indie pop), Laser Bloom (edm)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Sunrise City, Starlight Sprint is more energetic (0.88 vs 0.82), k-pop instead of pop. Compared with Sunrise City, Rooftop Lights is less energetic (0.76 vs 0.82), more acoustic, indie pop instead of pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The bridge drops almost everything out, so the final chorus hits harder on good speakers or in a car.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Sunrise City good for studying? A: Not really; its happy mood and very high energy (0.82) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Sunrise City good for workout? A: Not really; its happy mood and very high energy (0.82) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Sunrise City good for party? A: Yes; its happy mood and very high energy (0.82) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Sunrise City good for sleep? A: Not really; its happy mood and very high energy (0.82) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Sunrise City have vocals? A: Yes: lead female vocal with a big multi-tracked sing-along chorus.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Sunrise City acoustic? A: No, it is mostly electronic or produced (acousticness 0.18).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Sunrise City\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Midnight Coding\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} LoRoom\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} lofi | {\b Mood:} chill\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.42 (medium) | {\b Tempo:} 78 BPM (slow) | {\b Valence:} 0.56 (medium) | {\b Danceability:} 0.62 (high) | {\b Acousticness:} 0.71 (high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} A mellow lofi loop with dusty drums, muted electric-piano chords and soft rain samples. Steady and unobtrusive, it is made to sit quietly behind late-night work.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} dusty drum loop, muted electric piano chords, warm sub bass, soft rain samples, vinyl crackle\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a single four-bar loop that repeats with small variations: a filter sweep halfway through and a short break where only the rain and piano remain\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. The track title and the rain samples suggest a quiet room late at night with a screen glowing.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} late-night studying or coding, reading, journaling, working on something that needs steady focus\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want energy or something to sing along to; it is deliberately uneventful\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Focus Flow (lofi), Coffee Shop Stories (jazz), Library Rain (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Midnight Coding, Focus Flow is about the same energy, focused instead of chill. Compared with Midnight Coding, Coffee Shop Stories is about the same energy, more acoustic, relaxed instead of chill, jazz instead of lofi.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Works well on repeat for long sessions because nothing in it demands attention.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Midnight Coding good for studying? A: Yes; its chill mood and medium energy (0.42) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Midnight Coding good for workout? A: Not really; its chill mood and medium energy (0.42) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Midnight Coding good for party? A: Not really; its chill mood and medium energy (0.42) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Midnight Coding good for sleep? A: Yes; its chill mood and medium energy (0.42) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Midnight Coding have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Midnight Coding acoustic? A: Yes, mostly acoustic (acousticness 0.71).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Midnight Coding\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Storm Runner\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Voltline\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} rock | {\b Mood:} intense\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.91 (very high) | {\b Tempo:} 152 BPM (fast) | {\b Valence:} 0.48 (medium) | {\b Danceability:} 0.66 (high) | {\b Acousticness:} 0.10 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Fast, distorted guitar rock with pounding live drums and a shouted chorus. The energy is relentless from the first bar; it is built for adrenaline.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} distorted electric guitars, driving bass guitar, pounding live drums with double-time hi-hats, gang vocals in the chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} raw, shouted male lead vocal with gang vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} count-in straight into the main riff, two fast verses, explosive choruses, a guitar solo, and an abrupt ending on the last hit\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Running headfirst into a storm instead of away from it: pushing past fear, exhaustion and doubt.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} workouts, running, lifting, the last push of a hard task\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want calm background music; it never lets up\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} workout, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Iron Tempest (metal), Gym Hero (pop), Starlight Sprint (k-pop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Storm Runner, Iron Tempest is more energetic (0.97 vs 0.91), angry instead of intense, metal instead of rock. Compared with Storm Runner, Gym Hero is about the same energy, pop instead of rock.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The tempo (152 BPM) lines up well with a fast running cadence.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Storm Runner good for studying? A: Not really; its intense mood and very high energy (0.91) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Storm Runner good for workout? A: Yes; its intense mood and very high energy (0.91) fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Storm Runner good for party? A: Not really; its intense mood and very high energy (0.91) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Storm Runner good for sleep? A: Not really; its intense mood and very high energy (0.91) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Storm Runner have vocals? A: Yes: raw, shouted male lead vocal with gang vocals.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Storm Runner acoustic? A: No, it is mostly electronic or produced (acousticness 0.10).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Storm Runner\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Library Rain\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Paper Lanterns\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} lofi | {\b Mood:} chill\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.35 (low) | {\b Tempo:} 72 BPM (slow) | {\b Valence:} 0.60 (high) | {\b Danceability:} 0.58 (medium) | {\b Acousticness:} 0.86 (very high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Quiet lofi with plucked acoustic guitar, a brushed snare and the sound of rain on a window. Very calm, warm and cozy.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} plucked acoustic guitar, brushed snare, soft upright bass, rain on a window, vinyl crackle\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} gentle loop-based form; the guitar melody changes slightly every eight bars and the rain gets louder near the end\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. The mood is a rainy afternoon in a quiet library.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} studying, reading, rainy days, falling asleep, low-pressure creative work\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you need motivation or a beat to move to\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Coffee Shop Stories (jazz), Focus Flow (lofi), Spacewalk Thoughts (ambient)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Library Rain, Coffee Shop Stories is about the same energy, relaxed instead of chill, jazz instead of lofi. Compared with Library Rain, Focus Flow is more energetic (0.40 vs 0.35), focused instead of chill.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} One of the most acoustic tracks in the catalog, so it suits listeners who dislike electronic sounds.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Library Rain good for studying? A: Yes; its chill mood and low energy (0.35) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Library Rain good for workout? A: Not really; its chill mood and low energy (0.35) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Library Rain good for party? A: Not really; its chill mood and low energy (0.35) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Library Rain good for sleep? A: Yes; its chill mood and low energy (0.35) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Library Rain have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Library Rain acoustic? A: Yes, mostly acoustic (acousticness 0.86).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Library Rain\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Gym Hero\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Max Pulse\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} pop | {\b Mood:} intense\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.93 (very high) | {\b Tempo:} 132 BPM (fast) | {\b Valence:} 0.77 (high) | {\b Danceability:} 0.88 (very high) | {\b Acousticness:} 0.05 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} A pumped-up pop track with stadium drums, chanted vocals and a hard-hitting drop. It is aggressive for pop: more 'push through the last rep' than 'feel good'.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} stadium drums, heavy synth bass, distorted synth stabs, a hard-hitting drop, chanted crowd vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} chanted, shouted pop vocals with a call-and-response hook\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a building intro, verse, a chant pre-chorus, a big drop instead of a sung chorus, then a second drop with extra percussion\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Pure motivation: one more rep, no excuses, be your own hero.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} workouts, sports warm-ups, pre-game hype\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you asked for happy or feel-good pop; it is intense rather than cheerful\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} workout, party, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Laser Bloom (edm), Starlight Sprint (k-pop), Storm Runner (rock)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Gym Hero, Laser Bloom is about the same energy, euphoric instead of intense, edm instead of pop. Compared with Gym Hero, Starlight Sprint is less energetic (0.88 vs 0.93), happy instead of intense, k-pop instead of pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} It is labeled pop but behaves like a workout track, which is why it sometimes ranks high for pop fans who wanted something sunnier.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Gym Hero good for studying? A: Not really; its intense mood and very high energy (0.93) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Gym Hero good for workout? A: Yes; its intense mood and very high energy (0.93) fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Gym Hero good for party? A: Yes; its intense mood and very high energy (0.93) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Gym Hero good for sleep? A: Not really; its intense mood and very high energy (0.93) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Gym Hero have vocals? A: Yes: chanted, shouted pop vocals with a call-and-response hook.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Gym Hero acoustic? A: No, it is mostly electronic or produced (acousticness 0.05).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Gym Hero\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Spacewalk Thoughts\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Orbit Bloom\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} ambient | {\b Mood:} chill\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.28 (low) | {\b Tempo:} 60 BPM (slow) | {\b Valence:} 0.65 (high) | {\b Danceability:} 0.41 (medium) | {\b Acousticness:} 0.92 (very high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} A slow, floating ambient piece of soft synth pads and distant piano with no real beat. Spacious, weightless and calm.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} slow evolving synth pads, distant reverb-heavy piano, soft drones, faint radio static\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} no beat and no fixed sections; it slowly swells and fades over the whole track\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. It suggests floating weightlessly while looking back at Earth.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} sleep, meditation, deep focus, decompressing after a busy day\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want rhythm, a melody to hum, or anything upbeat\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Library Rain (lofi), Focus Flow (lofi), Midnight Coding (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Spacewalk Thoughts, Library Rain is more energetic (0.35 vs 0.28), lofi instead of ambient. Compared with Spacewalk Thoughts, Focus Flow is more energetic (0.40 vs 0.28), focused instead of chill, lofi instead of ambient.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Best at low volume; it is designed to disappear into the background.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Spacewalk Thoughts good for studying? A: Yes; its chill mood and low energy (0.28) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Spacewalk Thoughts good for workout? A: Not really; its chill mood and low energy (0.28) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Spacewalk Thoughts good for party? A: Not really; its chill mood and low energy (0.28) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Spacewalk Thoughts good for sleep? A: Yes; its chill mood and low energy (0.28) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Spacewalk Thoughts have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Spacewalk Thoughts acoustic? A: Yes, mostly acoustic (acousticness 0.92).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Spacewalk Thoughts\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Coffee Shop Stories\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Slow Stereo\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} jazz | {\b Mood:} relaxed\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.37 (low) | {\b Tempo:} 90 BPM (moderate) | {\b Valence:} 0.71 (high) | {\b Danceability:} 0.54 (medium) | {\b Acousticness:} 0.89 (very high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} An easygoing jazz trio of upright bass, brushed drums and gentle piano. It sounds like a quiet afternoon in a cafe and stays pleasantly in the background.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} upright bass, brushed drums, gentle jazz piano\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a classic jazz form: the piano states the melody, takes a relaxed solo, the bass takes a short solo, then the melody returns\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. It sounds like an afternoon in a small cafe with the rain outside.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} cooking, dinner, reading, coffee-shop style background music, relaxed studying\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want something with a strong beat or vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, dinner, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Library Rain (lofi), Focus Flow (lofi), Midnight Coding (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Coffee Shop Stories, Library Rain is about the same energy, chill instead of relaxed, lofi instead of jazz. Compared with Coffee Shop Stories, Focus Flow is about the same energy, focused instead of relaxed, lofi instead of jazz.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Warm and acoustic, so it pairs well with lofi playlists even though it is real jazz.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Coffee Shop Stories good for studying? A: Yes; its relaxed mood and low energy (0.37) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Coffee Shop Stories good for workout? A: Not really; its relaxed mood and low energy (0.37) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Coffee Shop Stories good for party? A: Not really; its relaxed mood and low energy (0.37) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Coffee Shop Stories good for sleep? A: Yes; its relaxed mood and low energy (0.37) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Coffee Shop Stories have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Coffee Shop Stories acoustic? A: Yes, mostly acoustic (acousticness 0.89).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Coffee Shop Stories\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Night Drive Loop\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Neon Echo\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} synthwave | {\b Mood:} moody\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.75 (high) | {\b Tempo:} 110 BPM (moderate) | {\b Valence:} 0.49 (medium) | {\b Danceability:} 0.73 (high) | {\b Acousticness:} 0.22 (low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Retro synthwave with pulsing arpeggios, gated drums and a dark, cinematic melody. It evokes empty highways and city lights after midnight.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} pulsing synth arpeggios, gated reverb drums, analog synth bass, a dark synth lead melody\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a slow fade-in, the main arpeggio loop, a melodic lead section, a breakdown, and a long fade-out\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. It evokes driving through empty city streets after midnight under neon lights.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} night drives, late-night walks, gaming, moody focus sessions\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want something bright or cheerful\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} road trip, night drive\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Rooftop Lights (indie pop), Laser Bloom (edm), Concrete Crown (hip-hop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Night Drive Loop, Rooftop Lights is about the same energy, happy instead of moody, indie pop instead of synthwave. Compared with Night Drive Loop, Laser Bloom is more energetic (0.95 vs 0.75), less acoustic, euphoric instead of moody, edm instead of synthwave.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Shares its artist (Neon Echo) with Sunrise City but has the opposite mood: dark and cinematic instead of sunny.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Night Drive Loop good for studying? A: Not really; its moody mood and high energy (0.75) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Night Drive Loop good for workout? A: Not really; its moody mood and high energy (0.75) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Night Drive Loop good for party? A: Not really; its moody mood and high energy (0.75) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Night Drive Loop good for sleep? A: Not really; its moody mood and high energy (0.75) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Night Drive Loop have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Night Drive Loop acoustic? A: No, it is mostly electronic or produced (acousticness 0.22).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Night Drive Loop\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Focus Flow\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} LoRoom\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} lofi | {\b Mood:} focused\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.40 (medium) | {\b Tempo:} 80 BPM (slow) | {\b Valence:} 0.59 (medium) | {\b Danceability:} 0.60 (high) | {\b Acousticness:} 0.78 (high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Minimal lofi with a steady head-nod beat, soft keys and no vocals. It is repetitive on purpose so it fades into the background while you concentrate.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} steady lofi drum loop, soft electric piano, warm bass, vinyl crackle\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} one loop with very small changes so it never pulls attention away from work\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. Built specifically as focus music.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} studying, coding, writing, any task that needs concentration\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you are looking for emotion or a big moment; it is intentionally flat\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Midnight Coding (lofi), Coffee Shop Stories (jazz), Library Rain (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Focus Flow, Midnight Coding is about the same energy, chill instead of focused. Compared with Focus Flow, Coffee Shop Stories is about the same energy, relaxed instead of focused, jazz instead of lofi.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Its mood is labeled focused rather than chill, so exact-mood searches for chill can miss it even though it fits.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Focus Flow good for studying? A: Yes; its focused mood and medium energy (0.40) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Focus Flow good for workout? A: Not really; its focused mood and medium energy (0.40) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Focus Flow good for party? A: Not really; its focused mood and medium energy (0.40) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Focus Flow good for sleep? A: Yes; its focused mood and medium energy (0.40) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Focus Flow have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Focus Flow acoustic? A: Yes, mostly acoustic (acousticness 0.78).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Focus Flow\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Rooftop Lights\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Indigo Parade\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} indie pop | {\b Mood:} happy\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.76 (high) | {\b Tempo:} 124 BPM (fast) | {\b Valence:} 0.81 (very high) | {\b Danceability:} 0.82 (very high) | {\b Acousticness:} 0.35 (low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Jangly indie pop with chiming guitars, handclaps and a warm, slightly lo-fi vocal. Summer-evening joy with a handmade feel.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} jangly electric guitars, chiming acoustic guitar, handclaps, tambourine, warm bass, live drums\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} warm, slightly lo-fi male lead vocal with group backing vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} guitar riff intro, two verses, a big singalong chorus, a handclap breakdown, and a final chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} A summer evening on a rooftop with friends, watching the city lights come on.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} road trips, summer evenings, hanging out with friends, a happy mood that is not too polished\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want a very produced or electronic sound\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} party, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Sunrise City (pop), Night Drive Loop (synthwave), Concrete Crown (hip-hop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Rooftop Lights, Sunrise City is more energetic (0.82 vs 0.76), less acoustic, pop instead of indie pop. Compared with Rooftop Lights, Night Drive Loop is about the same energy, moody instead of happy, synthwave instead of indie pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} A good pick for pop fans who want something happier and more handmade than mainstream pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Rooftop Lights good for studying? A: Not really; its happy mood and high energy (0.76) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Rooftop Lights good for workout? A: Not really; its happy mood and high energy (0.76) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Rooftop Lights good for party? A: Yes; its happy mood and high energy (0.76) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Rooftop Lights good for sleep? A: Not really; its happy mood and high energy (0.76) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Rooftop Lights have vocals? A: Yes: warm, slightly lo-fi male lead vocal with group backing vocals.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Rooftop Lights acoustic? A: Partly (acousticness 0.35).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Rooftop Lights\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Concrete Crown\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Kilo Verse\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} hip-hop | {\b Mood:} confident\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.78 (high) | {\b Tempo:} 94 BPM (moderate) | {\b Valence:} 0.62 (high) | {\b Danceability:} 0.86 (very high) | {\b Acousticness:} 0.12 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Swaggering hip-hop over a heavy boom-bap beat and deep 808 bass, with confident verses and a chantable hook.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} boom-bap drums, deep 808 bass, chopped soul sample, record scratches\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} confident male rap verses with a chanted hook\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} short intro, three rap verses separated by a repeated hook, and a scratch outro\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Building yourself up from nothing and claiming your place: self-belief and hustle.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} walking to class, getting hyped before a presentation, workouts, confidence boosts\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want calm or instrumental music\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} workout, party, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Starlight Sprint (k-pop), Sunrise City (pop), Rooftop Lights (indie pop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Concrete Crown, Starlight Sprint is more energetic (0.88 vs 0.78), happy instead of confident, k-pop instead of hip-hop. Compared with Concrete Crown, Sunrise City is about the same energy, happy instead of confident, pop instead of hip-hop.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The only hip-hop song in the catalog, so hip-hop fans will often see lofi tracks as related picks.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Concrete Crown good for studying? A: Not really; its confident mood and high energy (0.78) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Concrete Crown good for workout? A: Yes; its confident mood and high energy (0.78) fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Concrete Crown good for party? A: Yes; its confident mood and high energy (0.78) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Concrete Crown good for sleep? A: Not really; its confident mood and high energy (0.78) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Concrete Crown have vocals? A: Yes: confident male rap verses with a chanted hook.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Concrete Crown acoustic? A: No, it is mostly electronic or produced (acousticness 0.12).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Concrete Crown\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Moonlit Sonata Redux\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Clara Vey\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} classical | {\b Mood:} melancholy\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.22 (low) | {\b Tempo:} 66 BPM (slow) | {\b Valence:} 0.30 (low) | {\b Danceability:} 0.20 (low) | {\b Acousticness:} 0.97 (very high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} A slow solo-piano piece with long sustained notes and a wistful, minor-key melody. Very quiet, acoustic and introspective.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} solo grand piano with long sustained notes and soft pedal\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} none (instrumental)\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a slow opening theme, a gentle middle section in a brighter key, and a return to the opening theme that fades out\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} No lyrics. Wistful and introspective, like thinking about the past late at night.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} sleep, reading, studying, quiet evenings, reflective or sad moods\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want energy or a beat\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, sleep, heartbreak\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Spacewalk Thoughts (ambient), Paper Boats (folk), Library Rain (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Moonlit Sonata Redux, Spacewalk Thoughts is more energetic (0.28 vs 0.22), chill instead of melancholy, ambient instead of classical. Compared with Moonlit Sonata Redux, Paper Boats is more energetic (0.30 vs 0.22), sad instead of melancholy, folk instead of classical.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The most acoustic track in the catalog (acousticness 0.97).\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Moonlit Sonata Redux good for studying? A: Yes; its melancholy mood and low energy (0.22) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Moonlit Sonata Redux good for workout? A: Not really; its melancholy mood and low energy (0.22) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Moonlit Sonata Redux good for party? A: Not really; its melancholy mood and low energy (0.22) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Moonlit Sonata Redux good for sleep? A: Yes; its melancholy mood and low energy (0.22) fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Moonlit Sonata Redux have vocals? A: No, it is instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Moonlit Sonata Redux acoustic? A: Yes, mostly acoustic (acousticness 0.97).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Moonlit Sonata Redux\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Iron Tempest\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Graveforge\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} metal | {\b Mood:} angry\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.97 (very high) | {\b Tempo:} 168 BPM (fast) | {\b Valence:} 0.25 (low) | {\b Danceability:} 0.45 (medium) | {\b Acousticness:} 0.03 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Heavy metal with blast-beat drums, down-tuned riffs and growled vocals. It is the most aggressive and highest-energy track in the catalog.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} down-tuned distorted guitars, blast-beat drums, heavy bass guitar, guitar solo\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} growled and screamed male vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a feedback intro, crushing riffs, two verses, a half-time breakdown, a shredding guitar solo, and a final assault\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Rage and defiance: a storm that tears everything down.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} intense workouts, venting anger, heavy lifting\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want anything calm, happy or acoustic\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} workout\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Storm Runner (rock), Gym Hero (pop), Laser Bloom (edm)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Iron Tempest, Storm Runner is less energetic (0.91 vs 0.97), intense instead of angry, rock instead of metal. Compared with Iron Tempest, Gym Hero is about the same energy, intense instead of angry, pop instead of metal.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The highest-energy (0.97) and fastest (168 BPM) song in the catalog.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Iron Tempest good for studying? A: Not really; its angry mood and very high energy (0.97) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Iron Tempest good for workout? A: Yes; its angry mood and very high energy (0.97) fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Iron Tempest good for party? A: Not really; its angry mood and very high energy (0.97) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Iron Tempest good for sleep? A: Not really; its angry mood and very high energy (0.97) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Iron Tempest have vocals? A: Yes: growled and screamed male vocals.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Iron Tempest acoustic? A: No, it is mostly electronic or produced (acousticness 0.03).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Iron Tempest\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Dusty Porch Swing\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Willa Grange\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} country | {\b Mood:} nostalgic\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.52 (medium) | {\b Tempo:} 102 BPM (moderate) | {\b Valence:} 0.74 (high) | {\b Danceability:} 0.63 (high) | {\b Acousticness:} 0.68 (high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Acoustic country with fiddle, slide guitar and a story about summers at a grandparent's farmhouse. Warm, unhurried and nostalgic.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} acoustic guitar, fiddle, slide guitar, upright bass, light brushed drums, harmonica\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} warm female country vocal with a harmony on the chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} fiddle intro, storytelling verses, a gentle chorus, a fiddle solo, and a quiet final verse\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Remembering childhood summers on a grandparent's farmhouse porch: lemonade, crickets and simpler times.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} cooking, dinner, slow Sunday afternoons, nostalgic moods, road trips through the countryside\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want high energy or electronic production\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} road trip, night drive, heartbreak\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Crossroads Blue (blues), Paper Boats (folk), Midnight Coding (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Dusty Porch Swing, Crossroads Blue is less energetic (0.45 vs 0.52), sad instead of nostalgic, blues instead of country. Compared with Dusty Porch Swing, Paper Boats is less energetic (0.30 vs 0.52), more acoustic, sad instead of nostalgic, folk instead of country.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} A good fallback for folk or polka fans, since it shares acoustic instruments with those styles.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Dusty Porch Swing good for studying? A: Not really; its nostalgic mood and medium energy (0.52) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Dusty Porch Swing good for workout? A: Not really; its nostalgic mood and medium energy (0.52) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Dusty Porch Swing good for party? A: Not really; its nostalgic mood and medium energy (0.52) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Dusty Porch Swing good for sleep? A: Not really; its nostalgic mood and medium energy (0.52) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Dusty Porch Swing have vocals? A: Yes: warm female country vocal with a harmony on the chorus.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Dusty Porch Swing acoustic? A: Yes, mostly acoustic (acousticness 0.68).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Dusty Porch Swing\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Velvet Hours\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Sade Monroe\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} r&b | {\b Mood:} romantic\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.48 (medium) | {\b Tempo:} 84 BPM (slow) | {\b Valence:} 0.66 (high) | {\b Danceability:} 0.72 (high) | {\b Acousticness:} 0.40 (medium)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Smooth, slow-burning R&B with silky vocals, soft electric piano and a laid-back groove. An intimate, late-evening mood.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} soft electric piano, smooth bass, gentle programmed drums, string pads\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} silky, breathy female R&B vocal with layered harmonies\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a slow-groove intro, two verses, a smooth chorus, a vocal-run bridge, and a long fade\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} A slow evening with someone you love, where time seems to stretch.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} date night, dinner, late evenings, romantic moods\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want to dance hard or need a strong motivational push\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} night drive, heartbreak, dinner\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Coffee Shop Stories (jazz), Island Postcard (reggae), Crossroads Blue (blues)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Velvet Hours, Coffee Shop Stories is less energetic (0.37 vs 0.48), more acoustic, relaxed instead of romantic, jazz instead of r&b. Compared with Velvet Hours, Island Postcard is more energetic (0.55 vs 0.48), relaxed instead of romantic, reggae instead of r&b.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The only song in the catalog with a romantic mood.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Velvet Hours good for studying? A: Not really; its romantic mood and medium energy (0.48) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Velvet Hours good for workout? A: Not really; its romantic mood and medium energy (0.48) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Velvet Hours good for party? A: Not really; its romantic mood and medium energy (0.48) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Velvet Hours good for sleep? A: Not really; its romantic mood and medium energy (0.48) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Velvet Hours have vocals? A: Yes: silky, breathy female R&B vocal with layered harmonies.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Velvet Hours acoustic? A: Partly (acousticness 0.40).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Velvet Hours\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Laser Bloom\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Pulse Theory\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} edm | {\b Mood:} euphoric\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.95 (very high) | {\b Tempo:} 128 BPM (fast) | {\b Valence:} 0.88 (very high) | {\b Danceability:} 0.93 (very high) | {\b Acousticness:} 0.04 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Festival EDM with a long build, a huge euphoric drop and sparkling synth leads. Pure peak-time dance-floor energy; almost nothing acoustic.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} sparkling synth leads, supersaw chords, four-on-the-floor kick, a long riser build, a huge drop, sidechained bass\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} short chopped vocal samples only; mostly instrumental\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} intro, a long build with a riser, a massive drop, a breakdown, a second build and a bigger final drop\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Almost no lyrics; the chopped vocal hints at a night that feels endless.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} parties, dancing, pregaming, high-energy workouts\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want acoustic, calm or lyric-driven music\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} workout, party, road trip, night drive\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Starlight Sprint (k-pop), Sunrise City (pop), Gym Hero (pop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Laser Bloom, Starlight Sprint is less energetic (0.88 vs 0.95), happy instead of euphoric, k-pop instead of edm. Compared with Laser Bloom, Sunrise City is less energetic (0.82 vs 0.95), happy instead of euphoric, pop instead of edm.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The most euphoric track in the catalog and one of the least acoustic (acousticness 0.04).\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Laser Bloom good for studying? A: Not really; its euphoric mood and very high energy (0.95) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Laser Bloom good for workout? A: Yes; its euphoric mood and very high energy (0.95) fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Laser Bloom good for party? A: Yes; its euphoric mood and very high energy (0.95) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Laser Bloom good for sleep? A: Not really; its euphoric mood and very high energy (0.95) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Laser Bloom have vocals? A: Yes: short chopped vocal samples only; mostly instrumental.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Laser Bloom acoustic? A: No, it is mostly electronic or produced (acousticness 0.04).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Laser Bloom\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Island Postcard\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Roots Harbor\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} reggae | {\b Mood:} relaxed\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.55 (medium) | {\b Tempo:} 76 BPM (slow) | {\b Valence:} 0.83 (very high) | {\b Danceability:} 0.77 (high) | {\b Acousticness:} 0.45 (medium)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Sunny roots reggae with an off-beat guitar skank, warm bass and easygoing vocals about a beach town. Relaxed and bright.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} off-beat guitar skank, warm bass line, organ bubble, hand percussion, melodica\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} easygoing male vocal with call-and-response backing vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a relaxed groove that stays steady through two verses, a sing-along chorus, and a melodica solo\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Postcards from a beach town where nobody is in a hurry.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} beach days, lazy Sundays, cooking, relaxed hangouts, summer\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want intensity or very low energy for sleep\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} studying, dinner, chilling\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Velvet Hours (r&b), Midnight Coding (lofi), Concrete Crown (hip-hop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Island Postcard, Velvet Hours is less energetic (0.48 vs 0.55), romantic instead of relaxed, r&b instead of reggae. Compared with Island Postcard, Midnight Coding is less energetic (0.42 vs 0.55), more acoustic, chill instead of relaxed, lofi instead of reggae.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} The only reggae song in the catalog and the closest match for reggaeton or Latin requests.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Island Postcard good for studying? A: Yes; its relaxed mood and medium energy (0.55) fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Island Postcard good for workout? A: Not really; its relaxed mood and medium energy (0.55) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Island Postcard good for party? A: Not really; its relaxed mood and medium energy (0.55) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Island Postcard good for sleep? A: Not really; its relaxed mood and medium energy (0.55) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Island Postcard have vocals? A: Yes: easygoing male vocal with call-and-response backing vocals.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Island Postcard acoustic? A: Partly (acousticness 0.45).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Island Postcard\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Paper Boats\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Juniper Hollow\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} folk | {\b Mood:} sad\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.30 (low) | {\b Tempo:} 88 BPM (moderate) | {\b Valence:} 0.28 (low) | {\b Danceability:} 0.38 (low) | {\b Acousticness:} 0.91 (very high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Sparse acoustic folk: fingerpicked guitar and a fragile voice singing about letting someone go. Quiet and heartbreaking.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} fingerpicked acoustic guitar, soft cello, light piano in the last chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} fragile, close-miked female vocal\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a quiet guitar intro, three verses that grow slightly fuller, and a whispered final line\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Letting someone go, like folding paper boats and watching them drift away.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} heartbreak, rainy days, quiet reflection, sad moods\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you need to feel better quickly or want energy\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} heartbreak\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Crossroads Blue (blues), Dusty Porch Swing (country), Moonlit Sonata Redux (classical)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Paper Boats, Crossroads Blue is more energetic (0.45 vs 0.30), less acoustic, blues instead of folk. Compared with Paper Boats, Dusty Porch Swing is more energetic (0.52 vs 0.30), less acoustic, nostalgic instead of sad, country instead of folk.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} One of the saddest and most acoustic songs in the catalog (acousticness 0.91).\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Paper Boats good for studying? A: Not really; its sad mood and low energy (0.30) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Paper Boats good for workout? A: Not really; its sad mood and low energy (0.30) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Paper Boats good for party? A: Not really; its sad mood and low energy (0.30) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Paper Boats good for sleep? A: Not really; its sad mood and low energy (0.30) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Paper Boats have vocals? A: Yes: fragile, close-miked female vocal.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Paper Boats acoustic? A: Yes, mostly acoustic (acousticness 0.91).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Paper Boats\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Crossroads Blue\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} Eddie Lark\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} blues | {\b Mood:} sad\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.45 (medium) | {\b Tempo:} 70 BPM (slow) | {\b Valence:} 0.35 (low) | {\b Danceability:} 0.50 (medium) | {\b Acousticness:} 0.62 (high)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} Slow electric blues with a crying lead guitar and weary vocals. Soulful sadness at a walking pace.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} crying electric lead guitar, Hammond organ, walking bass, slow shuffle drums, harmonica\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} weary, soulful male blues vocal\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a twelve-bar blues form: three verses, a long guitar solo, and a final verse\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Standing at a crossroads after losing everything and deciding which way to go.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} heartbreak, late nights, sad but soulful moods, slow evenings\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you want upbeat or high-energy music\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} night drive, heartbreak\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Dusty Porch Swing (country), Coffee Shop Stories (jazz), Midnight Coding (lofi)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Crossroads Blue, Dusty Porch Swing is more energetic (0.52 vs 0.45), nostalgic instead of sad, country instead of blues. Compared with Crossroads Blue, Coffee Shop Stories is less energetic (0.37 vs 0.45), more acoustic, relaxed instead of sad, jazz instead of blues.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Sadder than most songs in the catalog but with more groove than the folk ballads.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Crossroads Blue good for studying? A: Not really; its sad mood and medium energy (0.45) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Crossroads Blue good for workout? A: Not really; its sad mood and medium energy (0.45) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Crossroads Blue good for party? A: Not really; its sad mood and medium energy (0.45) do not fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Crossroads Blue good for sleep? A: Not really; its sad mood and medium energy (0.45) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Crossroads Blue have vocals? A: Yes: weary, soulful male blues vocal.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Crossroads Blue acoustic? A: Yes, mostly acoustic (acousticness 0.62).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Crossroads Blue\par}
+{\pard\sb200\sa80 \b\fs26\cf2 Song: Starlight Sprint\par}
+{\pard\sb0\sa80 \fs18 {\b Artist:} NOVA9\par}
+{\pard\sb0\sa80 \fs18 {\b Genre:} k-pop | {\b Mood:} happy\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} 0.88 (very high) | {\b Tempo:} 126 BPM (fast) | {\b Valence:} 0.90 (very high) | {\b Danceability:} 0.89 (very high) | {\b Acousticness:} 0.10 (very low)\par}
+{\pard\sb0\sa80 \fs18 {\b Description:} High-gloss K-pop with rapid-fire verses, a soaring chorus and a dance break. Bright, fast and relentlessly upbeat.\par}
+{\pard\sb0\sa80 \fs18 {\b Sound:} glossy synths, punchy electronic drums, sliding synth bass, a dance-break beat switch, layered group vocals\par}
+{\pard\sb0\sa80 \fs18 {\b Vocals:} group vocals with rapid-fire rap verses and a soaring sung chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Structure:} a cold-open chorus, fast verses, a pre-chorus build, the chorus, a dance break, and a key-change final chorus\par}
+{\pard\sb0\sa80 \fs18 {\b Lyric themes:} Racing toward a dream under the stars, with friends cheering you on.\par}
+{\pard\sb0\sa80 \fs18 {\b Listen when:} parties, dancing, workouts, road trips, any time you want maximum upbeat energy\par}
+{\pard\sb0\sa80 \fs18 {\b Skip when:} you need calm, focus or acoustic music\par}
+{\pard\sb0\sa80 \fs18 {\b Good for:} party, road trip\par}
+{\pard\sb0\sa80 \fs18 {\b Similar songs:} Laser Bloom (edm), Sunrise City (pop), Concrete Crown (hip-hop)\par}
+{\pard\sb0\sa80 \fs18 {\b Comparisons:} Compared with Starlight Sprint, Laser Bloom is more energetic (0.95 vs 0.88), euphoric instead of happy, edm instead of k-pop. Compared with Starlight Sprint, Sunrise City is less energetic (0.82 vs 0.88), pop instead of k-pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Listening tip:} Very happy and very high energy at the same time, a combination few other songs in the catalog have.\par}
+{\pard\sb0\sa80 \fs18 {\b Questions and answers:}\par}
+{\pard\sb0\sa80 \fs18 Q: Is Starlight Sprint good for studying? A: Not really; its happy mood and very high energy (0.88) do not fit the studying target of focused mood and energy around 0.35.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Starlight Sprint good for workout? A: Not really; its happy mood and very high energy (0.88) do not fit the workout target of intense mood and energy around 0.9.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Starlight Sprint good for party? A: Yes; its happy mood and very high energy (0.88) fit the party target of euphoric mood and energy around 0.88.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Starlight Sprint good for sleep? A: Not really; its happy mood and very high energy (0.88) do not fit the sleep target of chill mood and energy around 0.2.\par}
+{\pard\sb0\sa80 \fs18 Q: Does Starlight Sprint have vocals? A: Yes: group vocals with rapid-fire rap verses and a soaring sung chorus.\par}
+{\pard\sb0\sa80 \fs18 Q: Is Starlight Sprint acoustic? A: No, it is mostly electronic or produced (acousticness 0.10).\par}
+{\pard\sb0\sa80 \fs14\cf3 End of song: Starlight Sprint\par}
+\page
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 3: Activity playlists\par}
+{\pard\sb0\sa80 \fs20 Each playlist below is the top 5 that VibeFinder returns (offline mode, with retrieval) for the request 'music for <activity>'.\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: studying\par}
+{\pard\sb0\sa80 \fs18 Target: focused mood, energy about 0.35, acoustic preference yes. Steady, low-energy music without busy vocals helps people concentrate. Lofi, ambient, and classical are the usual picks.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Focus Flow\tab lofi / focused\tab 0.40\tab 3.81\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Library Rain\tab lofi / chill\tab 0.35\tab 3.43\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Coffee Shop Stories\tab jazz / relaxed\tab 0.37\tab 3.42\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Spacewalk Thoughts\tab ambient / chill\tab 0.28\tab 3.35\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Midnight Coding\tab lofi / chill\tab 0.42\tab 3.25\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: workout\par}
+{\pard\sb0\sa80 \fs18 Target: intense mood, energy about 0.9, acoustic preference no. Fast, loud, driving music keeps a workout moving. Look for very high energy and a strong beat.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Storm Runner\tab rock / intense\tab 0.91\tab 3.94\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Iron Tempest\tab metal / angry\tab 0.97\tab 3.38\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Gym Hero\tab pop / intense\tab 0.93\tab 2.93\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Laser Bloom\tab edm / euphoric\tab 0.95\tab 2.91\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Concrete Crown\tab hip-hop / confident\tab 0.78\tab 2.76\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: party\par}
+{\pard\sb0\sa80 \fs18 Target: euphoric mood, energy about 0.88, acoustic preference no. Party music needs high energy and danceability. Euphoric or happy songs work best.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Laser Bloom\tab edm / euphoric\tab 0.95\tab 3.88\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Starlight Sprint\tab k-pop / happy\tab 0.88\tab 3.45\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Sunrise City\tab pop / happy\tab 0.82\tab 3.32\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Concrete Crown\tab hip-hop / confident\tab 0.78\tab 3.29\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Gym Hero\tab pop / intense\tab 0.93\tab 2.90\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: sleep\par}
+{\pard\sb0\sa80 \fs18 Target: chill mood, energy about 0.2, acoustic preference yes. For sleep, energy should be as low as possible, with soft acoustic textures and no sudden changes.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Spacewalk Thoughts\tab ambient / chill\tab 0.28\tab 3.84\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Library Rain\tab lofi / chill\tab 0.35\tab 3.71\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Midnight Coding\tab lofi / chill\tab 0.42\tab 3.52\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Focus Flow\tab lofi / focused\tab 0.40\tab 3.09\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Moonlit Sonata Redux\tab classical / melancholy\tab 0.22\tab 2.96\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: road trip\par}
+{\pard\sb0\sa80 \fs18 Target: happy mood, energy about 0.75, acoustic preference no. Sing-along, upbeat songs with a steady pulse make long drives feel shorter.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Rooftop Lights\tab indie pop / happy\tab 0.76\tab 3.81\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Sunrise City\tab pop / happy\tab 0.82\tab 3.81\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Night Drive Loop\tab synthwave / moody\tab 0.75\tab 2.89\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Starlight Sprint\tab k-pop / happy\tab 0.88\tab 2.75\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Gym Hero\tab pop / intense\tab 0.93\tab 2.71\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: night drive\par}
+{\pard\sb0\sa80 \fs18 Target: moody mood, energy about 0.7, acoustic preference no. Late-night driving suits moody, cinematic music with steady synth pulses.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Night Drive Loop\tab synthwave / moody\tab 0.75\tab 3.81\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Laser Bloom\tab edm / euphoric\tab 0.95\tab 2.60\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Velvet Hours\tab r&b / romantic\tab 0.48\tab 2.47\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Dusty Porch Swing\tab country / nostalgic\tab 0.52\tab 1.89\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Concrete Crown\tab hip-hop / confident\tab 0.78\tab 1.82\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: heartbreak\par}
+{\pard\sb0\sa80 \fs18 Target: sad mood, energy about 0.35, acoustic preference yes. After a breakup people often want sad, slow, acoustic songs that match how they feel.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Paper Boats\tab folk / sad\tab 0.30\tab 3.88\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Crossroads Blue\tab blues / sad\tab 0.45\tab 3.66\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Moonlit Sonata Redux\tab classical / melancholy\tab 0.22\tab 3.29\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Velvet Hours\tab r&b / romantic\tab 0.48\tab 2.50\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Dusty Porch Swing\tab country / nostalgic\tab 0.52\tab 2.08\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: dinner\par}
+{\pard\sb0\sa80 \fs18 Target: romantic mood, energy about 0.45, acoustic preference yes. Background music for dinner should be warm and medium-low energy so people can still talk.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Velvet Hours\tab r&b / romantic\tab 0.48\tab 3.66\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Coffee Shop Stories\tab jazz / relaxed\tab 0.37\tab 2.82\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Island Postcard\tab reggae / relaxed\tab 0.55\tab 2.57\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Crossroads Blue\tab blues / sad\tab 0.45\tab 1.81\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Focus Flow\tab lofi / focused\tab 0.40\tab 1.81\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Playlist: chilling\par}
+{\pard\sb0\sa80 \fs18 Target: relaxed mood, energy about 0.45, acoustic preference yes. Easygoing, unhurried songs for downtime.\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 {\b #\tab Song\tab Genre / mood\tab Energy\tab Score}\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 1\tab Coffee Shop Stories\tab jazz / relaxed\tab 0.37\tab 3.82\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 2\tab Island Postcard\tab reggae / relaxed\tab 0.55\tab 3.57\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 3\tab Focus Flow\tab lofi / focused\tab 0.40\tab 3.31\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 4\tab Midnight Coding\tab lofi / chill\tab 0.42\tab 3.31\par}
+{\pard\fs16\tx500\tx1600\tx2700\tx3800\tx4900\tx6000\tx7100\tx8200\tx9300 5\tab Library Rain\tab lofi / chill\tab 0.35\tab 3.28\par}
+\page
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 4: Genre guide\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: pop\par}
+{\pard\sb0\sa80 \fs18 Catchy, hook-driven songs with polished production. Pop fans usually enjoy indie pop and k-pop, which share the same bright melodies and verse-chorus structure.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} pop music, top 40, mainstream | {\b Related genres:} indie pop, k-pop, edm\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Sunrise City, Gym Hero\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Rooftop Lights (indie pop), Laser Bloom (edm), Starlight Sprint (k-pop)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: indie pop\par}
+{\pard\sb0\sa80 \fs18 Pop melodies with a looser, more handmade sound. Often warmer and a bit more acoustic than mainstream pop.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} indie, bedroom pop | {\b Related genres:} pop, folk, synthwave\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Rooftop Lights\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Sunrise City (pop), Gym Hero (pop), Night Drive Loop (synthwave), Paper Boats (folk)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: k-pop\par}
+{\pard\sb0\sa80 \fs18 Korean pop: high-energy, heavily produced, dance-focused, with sharp choreography-ready beats.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} kpop, korean pop | {\b Related genres:} pop, edm, hip-hop\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Starlight Sprint\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Sunrise City (pop), Gym Hero (pop), Concrete Crown (hip-hop), Laser Bloom (edm)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: lofi\par}
+{\pard\sb0\sa80 \fs18 Mellow, dusty beats with soft piano and vinyl crackle. A classic choice for studying and focus because it has steady rhythm and no distracting vocals.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} lo-fi, lo fi, lofi hip hop, study beats | {\b Related genres:} ambient, jazz, hip-hop\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Midnight Coding, Library Rain, Focus Flow\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Spacewalk Thoughts (ambient), Coffee Shop Stories (jazz), Concrete Crown (hip-hop)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: ambient\par}
+{\pard\sb0\sa80 \fs18 Slow, textural music without a strong beat. Very low energy; good for sleep, meditation, and deep focus.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} atmospheric, drone, soundscape | {\b Related genres:} lofi, classical\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Spacewalk Thoughts\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Midnight Coding (lofi), Library Rain (lofi), Focus Flow (lofi), Moonlit Sonata Redux (classical)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: jazz\par}
+{\pard\sb0\sa80 \fs18 Improvised, swinging music. Low-to-medium energy jazz works well in the background for cooking, dinner, and coffee shops.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} smooth jazz, coffee shop jazz | {\b Related genres:} lofi, blues, r&b\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Coffee Shop Stories\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Midnight Coding (lofi), Library Rain (lofi), Focus Flow (lofi), Velvet Hours (r&b), Crossroads Blue (blues)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: classical\par}
+{\pard\sb0\sa80 \fs18 Orchestral and solo piano music. Usually very acoustic and low energy; common for reading, studying, and calm evenings.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} orchestral, piano, symphony | {\b Related genres:} ambient\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Moonlit Sonata Redux\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Spacewalk Thoughts (ambient)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: rock\par}
+{\pard\sb0\sa80 \fs18 Guitar-driven music with live drums. High-energy rock is a staple of workout playlists.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} rock music, alt rock, alternative, punk | {\b Related genres:} metal, blues\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Storm Runner\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Iron Tempest (metal), Crossroads Blue (blues)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: metal\par}
+{\pard\sb0\sa80 \fs18 Loud, distorted, very high-energy music. Fits angry or intense moods and hard workouts.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} heavy metal, metalcore | {\b Related genres:} rock\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Iron Tempest\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Storm Runner (rock)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: synthwave\par}
+{\pard\sb0\sa80 \fs18 Retro 80s-style synthesizers and drum machines. Moody and cinematic; a common pick for night drives.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} synth, retrowave, outrun | {\b Related genres:} edm, indie pop\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Night Drive Loop\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Rooftop Lights (indie pop), Laser Bloom (edm)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: hip-hop\par}
+{\pard\sb0\sa80 \fs18 Rhythm and rapped vocals over beats. Confident, medium-high energy.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} hip hop, hiphop, rap, trap | {\b Related genres:} r&b, lofi, k-pop\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Concrete Crown\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Midnight Coding (lofi), Library Rain (lofi), Focus Flow (lofi), Velvet Hours (r&b), Starlight Sprint (k-pop)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: r&b\par}
+{\pard\sb0\sa80 \fs18 Smooth vocals and grooves. Often romantic and medium-low energy.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} rnb, r and b, soul, neo soul | {\b Related genres:} hip-hop, jazz\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Velvet Hours\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Coffee Shop Stories (jazz), Concrete Crown (hip-hop)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: edm\par}
+{\pard\sb0\sa80 \fs18 Electronic dance music built for clubs: very high energy, euphoric drops, almost never acoustic.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} electronic dance, house, techno, trance, dubstep | {\b Related genres:} pop, k-pop, synthwave\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Laser Bloom\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Sunrise City (pop), Gym Hero (pop), Night Drive Loop (synthwave), Starlight Sprint (k-pop)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: country\par}
+{\pard\sb0\sa80 \fs18 Story-driven songs with acoustic guitar and fiddle. Often nostalgic, medium energy.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} country music, americana, bluegrass | {\b Related genres:} folk, blues\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Dusty Porch Swing\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Paper Boats (folk), Crossroads Blue (blues)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: folk\par}
+{\pard\sb0\sa80 \fs18 Acoustic, lyric-focused music. Usually low energy and very acoustic; often sad or reflective.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} singer-songwriter, acoustic folk | {\b Related genres:} country, indie pop, blues\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Paper Boats\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Rooftop Lights (indie pop), Dusty Porch Swing (country), Crossroads Blue (blues)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: blues\par}
+{\pard\sb0\sa80 \fs18 Twelve-bar songs about hard times. Sad or soulful, low-to-medium energy.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} delta blues | {\b Related genres:} jazz, rock, country\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Crossroads Blue\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Storm Runner (rock), Coffee Shop Stories (jazz), Dusty Porch Swing (country)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: reggae\par}
+{\pard\sb0\sa80 \fs18 Laid-back off-beat rhythm. Relaxed, sunny, medium energy; a beach and summer staple.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} dub, ska | {\b Related genres:} hip-hop, r&b\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} Island Postcard\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Concrete Crown (hip-hop), Velvet Hours (r&b)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: polka\par}
+{\pard\sb0\sa80 \fs18 Upbeat accordion dance music from Central Europe. Not in the catalog; the closest sounds are folk and country, which share the acoustic instruments and dance rhythms.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} oompah | {\b Related genres:} folk, country\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} none in the catalog; VibeFinder uses the related genres instead\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Dusty Porch Swing (country), Paper Boats (folk)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: latin\par}
+{\pard\sb0\sa80 \fs18 Danceable Latin American styles. Not in the catalog; reggae and pop share the rhythm-first feel.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} reggaeton, salsa, bachata, cumbia | {\b Related genres:} reggae, pop, edm\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} none in the catalog; VibeFinder uses the related genres instead\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Sunrise City (pop), Gym Hero (pop), Laser Bloom (edm), Island Postcard (reggae)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Genre: gospel\par}
+{\pard\sb0\sa80 \fs18 Choir-led spiritual music. Not in the catalog; r&b and blues share its vocal style.\par}
+{\pard\sb0\sa80 \fs18 {\b Also called:} worship, choir | {\b Related genres:} r&b, blues\par}
+{\pard\sb0\sa80 \fs18 {\b Catalog songs:} none in the catalog; VibeFinder uses the related genres instead\par}
+{\pard\sb0\sa80 \fs18 {\b Songs in related genres:} Velvet Hours (r&b), Crossroads Blue (blues)\par}
+\page
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 5: Mood map\par}
+{\pard\sb0\sa80 \fs20 Songs grouped by mood family, sorted from lowest to highest energy.\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Mood family: chill / focused / relaxed\par}
+{\pard\sb0\sa80 \fs18 Spacewalk Thoughts (chill, energy 0.28), Library Rain (chill, energy 0.35), Coffee Shop Stories (relaxed, energy 0.37), Focus Flow (focused, energy 0.40), Midnight Coding (chill, energy 0.42), Island Postcard (relaxed, energy 0.55)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Mood family: confident / euphoric / happy\par}
+{\pard\sb0\sa80 \fs18 Rooftop Lights (happy, energy 0.76), Concrete Crown (confident, energy 0.78), Sunrise City (happy, energy 0.82), Starlight Sprint (happy, energy 0.88), Laser Bloom (euphoric, energy 0.95)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Mood family: angry / intense\par}
+{\pard\sb0\sa80 \fs18 Storm Runner (intense, energy 0.91), Gym Hero (intense, energy 0.93), Iron Tempest (angry, energy 0.97)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Mood family: melancholy / moody / nostalgic / sad\par}
+{\pard\sb0\sa80 \fs18 Moonlit Sonata Redux (melancholy, energy 0.22), Paper Boats (sad, energy 0.30), Crossroads Blue (sad, energy 0.45), Dusty Porch Swing (nostalgic, energy 0.52), Night Drive Loop (moody, energy 0.75)\par}
+{\pard\sb160\sa80 \b\fs22\cf1 Moods outside the families\par}
+{\pard\sb0\sa80 \fs18 Velvet Hours (romantic, energy 0.48)\par}
+{\pard\par}
+{\pard\sb240\sa80 \b\fs32\cf1 Chapter 6: Glossary\par}
+{\pard\sb0\sa80 \fs18 {\b Energy:} How intense and active a song feels, from 0.0 (very calm) to 1.0 (very intense). VibeFinder rewards closeness to the energy you want, not 'higher is better'.\par}
+{\pard\sb0\sa80 \fs18 {\b Valence:} How positive a song sounds, from 0.0 (sad, dark) to 1.0 (happy, bright).\par}
+{\pard\sb0\sa80 \fs18 {\b Danceability:} How suitable the rhythm is for dancing, from 0.0 to 1.0.\par}
+{\pard\sb0\sa80 \fs18 {\b Acousticness:} How acoustic (real instruments, unplugged) versus electronic or produced a song sounds, from 0.0 to 1.0.\par}
+{\pard\sb0\sa80 \fs18 {\b Tempo (BPM):} Beats per minute. Around 60-80 BPM feels slow, 90-120 moderate, 125+ fast.\par}
+{\pard\sb0\sa80 \fs18 {\b Instrumental:} A song with no sung or rapped vocals. Marked in this guide as 'Vocals: none (instrumental)'.\par}
+{\pard\sb0\sa80 \fs18 {\b Related genre:} A genre that fans of another genre usually also enjoy, taken from the VibeFinder genre notes. Related genres earn half of the genre points when ranking.\par}
+{\pard\sb0\sa80 \fs18 {\b Mood family:} Groups of moods that feel alike: chill/relaxed/focused, happy/euphoric/confident, intense/angry, and sad/melancholy/moody/nostalgic.\par}
+{\pard\sb0\sa80 \fs18 {\b Confidence:} VibeFinder's own estimate of how well it understood and matched a request (0 to 1). Below 0.5 it asks the listener for more detail.\par}
+}

@@ -1,0 +1,183 @@
+{
+  "_about": "Hand-written details for the song guide PDF (tools/make_song_guide.py). All songs and artists are fictional. 'sound' lists only instruments and textures that ARE in the song, because the retriever matches sound words against it. 'vocals' says 'none (instrumental)' for songs without singing.",
+  "Sunrise City": {
+    "sound": "glossy synth pads, bright synth lead, bouncing electric bass, punchy programmed drums, handclaps, layered backing vocals",
+    "vocals": "lead female vocal with a big multi-tracked sing-along chorus",
+    "structure": "short synth intro, two verses, a pre-chorus that builds, a soaring chorus, a stripped-down bridge with just bass and vocals, and a final double chorus with extra harmonies",
+    "lyrics": "Leaving the city at dawn with friends, the skyline turning gold, and the feeling that the whole day is still ahead.",
+    "listen_when": "road trips, getting ready to go out, sunny mornings, any time you want an instant mood lift",
+    "skip_when": "you need to concentrate or wind down; the chorus is designed to grab attention",
+    "tip": "The bridge drops almost everything out, so the final chorus hits harder on good speakers or in a car."
+  },
+  "Midnight Coding": {
+    "sound": "dusty drum loop, muted electric piano chords, warm sub bass, soft rain samples, vinyl crackle",
+    "vocals": "none (instrumental)",
+    "structure": "a single four-bar loop that repeats with small variations: a filter sweep halfway through and a short break where only the rain and piano remain",
+    "lyrics": "No lyrics. The track title and the rain samples suggest a quiet room late at night with a screen glowing.",
+    "listen_when": "late-night studying or coding, reading, journaling, working on something that needs steady focus",
+    "skip_when": "you want energy or something to sing along to; it is deliberately uneventful",
+    "tip": "Works well on repeat for long sessions because nothing in it demands attention."
+  },
+  "Storm Runner": {
+    "sound": "distorted electric guitars, driving bass guitar, pounding live drums with double-time hi-hats, gang vocals in the chorus",
+    "vocals": "raw, shouted male lead vocal with gang vocals",
+    "structure": "count-in straight into the main riff, two fast verses, explosive choruses, a guitar solo, and an abrupt ending on the last hit",
+    "lyrics": "Running headfirst into a storm instead of away from it: pushing past fear, exhaustion and doubt.",
+    "listen_when": "workouts, running, lifting, the last push of a hard task",
+    "skip_when": "you want calm background music; it never lets up",
+    "tip": "The tempo (152 BPM) lines up well with a fast running cadence."
+  },
+  "Library Rain": {
+    "sound": "plucked acoustic guitar, brushed snare, soft upright bass, rain on a window, vinyl crackle",
+    "vocals": "none (instrumental)",
+    "structure": "gentle loop-based form; the guitar melody changes slightly every eight bars and the rain gets louder near the end",
+    "lyrics": "No lyrics. The mood is a rainy afternoon in a quiet library.",
+    "listen_when": "studying, reading, rainy days, falling asleep, low-pressure creative work",
+    "skip_when": "you need motivation or a beat to move to",
+    "tip": "One of the most acoustic tracks in the catalog, so it suits listeners who dislike electronic sounds."
+  },
+  "Gym Hero": {
+    "sound": "stadium drums, heavy synth bass, distorted synth stabs, a hard-hitting drop, chanted crowd vocals",
+    "vocals": "chanted, shouted pop vocals with a call-and-response hook",
+    "structure": "a building intro, verse, a chant pre-chorus, a big drop instead of a sung chorus, then a second drop with extra percussion",
+    "lyrics": "Pure motivation: one more rep, no excuses, be your own hero.",
+    "listen_when": "workouts, sports warm-ups, pre-game hype",
+    "skip_when": "you asked for happy or feel-good pop; it is intense rather than cheerful",
+    "tip": "It is labeled pop but behaves like a workout track, which is why it sometimes ranks high for pop fans who wanted something sunnier."
+  },
+  "Spacewalk Thoughts": {
+    "sound": "slow evolving synth pads, distant reverb-heavy piano, soft drones, faint radio static",
+    "vocals": "none (instrumental)",
+    "structure": "no beat and no fixed sections; it slowly swells and fades over the whole track",
+    "lyrics": "No lyrics. It suggests floating weightlessly while looking back at Earth.",
+    "listen_when": "sleep, meditation, deep focus, decompressing after a busy day",
+    "skip_when": "you want rhythm, a melody to hum, or anything upbeat",
+    "tip": "Best at low volume; it is designed to disappear into the background."
+  },
+  "Coffee Shop Stories": {
+    "sound": "upright bass, brushed drums, gentle jazz piano",
+    "vocals": "none (instrumental)",
+    "structure": "a classic jazz form: the piano states the melody, takes a relaxed solo, the bass takes a short solo, then the melody returns",
+    "lyrics": "No lyrics. It sounds like an afternoon in a small cafe with the rain outside.",
+    "listen_when": "cooking, dinner, reading, coffee-shop style background music, relaxed studying",
+    "skip_when": "you want something with a strong beat or vocals",
+    "tip": "Warm and acoustic, so it pairs well with lofi playlists even though it is real jazz."
+  },
+  "Night Drive Loop": {
+    "sound": "pulsing synth arpeggios, gated reverb drums, analog synth bass, a dark synth lead melody",
+    "vocals": "none (instrumental)",
+    "structure": "a slow fade-in, the main arpeggio loop, a melodic lead section, a breakdown, and a long fade-out",
+    "lyrics": "No lyrics. It evokes driving through empty city streets after midnight under neon lights.",
+    "listen_when": "night drives, late-night walks, gaming, moody focus sessions",
+    "skip_when": "you want something bright or cheerful",
+    "tip": "Shares its artist (Neon Echo) with Sunrise City but has the opposite mood: dark and cinematic instead of sunny."
+  },
+  "Focus Flow": {
+    "sound": "steady lofi drum loop, soft electric piano, warm bass, vinyl crackle",
+    "vocals": "none (instrumental)",
+    "structure": "one loop with very small changes so it never pulls attention away from work",
+    "lyrics": "No lyrics. Built specifically as focus music.",
+    "listen_when": "studying, coding, writing, any task that needs concentration",
+    "skip_when": "you are looking for emotion or a big moment; it is intentionally flat",
+    "tip": "Its mood is labeled focused rather than chill, so exact-mood searches for chill can miss it even though it fits."
+  },
+  "Rooftop Lights": {
+    "sound": "jangly electric guitars, chiming acoustic guitar, handclaps, tambourine, warm bass, live drums",
+    "vocals": "warm, slightly lo-fi male lead vocal with group backing vocals",
+    "structure": "guitar riff intro, two verses, a big singalong chorus, a handclap breakdown, and a final chorus",
+    "lyrics": "A summer evening on a rooftop with friends, watching the city lights come on.",
+    "listen_when": "road trips, summer evenings, hanging out with friends, a happy mood that is not too polished",
+    "skip_when": "you want a very produced or electronic sound",
+    "tip": "A good pick for pop fans who want something happier and more handmade than mainstream pop."
+  },
+  "Concrete Crown": {
+    "sound": "boom-bap drums, deep 808 bass, chopped soul sample, record scratches",
+    "vocals": "confident male rap verses with a chanted hook",
+    "structure": "short intro, three rap verses separated by a repeated hook, and a scratch outro",
+    "lyrics": "Building yourself up from nothing and claiming your place: self-belief and hustle.",
+    "listen_when": "walking to class, getting hyped before a presentation, workouts, confidence boosts",
+    "skip_when": "you want calm or instrumental music",
+    "tip": "The only hip-hop song in the catalog, so hip-hop fans will often see lofi tracks as related picks."
+  },
+  "Moonlit Sonata Redux": {
+    "sound": "solo grand piano with long sustained notes and soft pedal",
+    "vocals": "none (instrumental)",
+    "structure": "a slow opening theme, a gentle middle section in a brighter key, and a return to the opening theme that fades out",
+    "lyrics": "No lyrics. Wistful and introspective, like thinking about the past late at night.",
+    "listen_when": "sleep, reading, studying, quiet evenings, reflective or sad moods",
+    "skip_when": "you want energy or a beat",
+    "tip": "The most acoustic track in the catalog (acousticness 0.97)."
+  },
+  "Iron Tempest": {
+    "sound": "down-tuned distorted guitars, blast-beat drums, heavy bass guitar, guitar solo",
+    "vocals": "growled and screamed male vocals",
+    "structure": "a feedback intro, crushing riffs, two verses, a half-time breakdown, a shredding guitar solo, and a final assault",
+    "lyrics": "Rage and defiance: a storm that tears everything down.",
+    "listen_when": "intense workouts, venting anger, heavy lifting",
+    "skip_when": "you want anything calm, happy or acoustic",
+    "tip": "The highest-energy (0.97) and fastest (168 BPM) song in the catalog."
+  },
+  "Dusty Porch Swing": {
+    "sound": "acoustic guitar, fiddle, slide guitar, upright bass, light brushed drums, harmonica",
+    "vocals": "warm female country vocal with a harmony on the chorus",
+    "structure": "fiddle intro, storytelling verses, a gentle chorus, a fiddle solo, and a quiet final verse",
+    "lyrics": "Remembering childhood summers on a grandparent's farmhouse porch: lemonade, crickets and simpler times.",
+    "listen_when": "cooking, dinner, slow Sunday afternoons, nostalgic moods, road trips through the countryside",
+    "skip_when": "you want high energy or electronic production",
+    "tip": "A good fallback for folk or polka fans, since it shares acoustic instruments with those styles."
+  },
+  "Velvet Hours": {
+    "sound": "soft electric piano, smooth bass, gentle programmed drums, string pads",
+    "vocals": "silky, breathy female R&B vocal with layered harmonies",
+    "structure": "a slow-groove intro, two verses, a smooth chorus, a vocal-run bridge, and a long fade",
+    "lyrics": "A slow evening with someone you love, where time seems to stretch.",
+    "listen_when": "date night, dinner, late evenings, romantic moods",
+    "skip_when": "you want to dance hard or need a strong motivational push",
+    "tip": "The only song in the catalog with a romantic mood."
+  },
+  "Laser Bloom": {
+    "sound": "sparkling synth leads, supersaw chords, four-on-the-floor kick, a long riser build, a huge drop, sidechained bass",
+    "vocals": "short chopped vocal samples only; mostly instrumental",
+    "structure": "intro, a long build with a riser, a massive drop, a breakdown, a second build and a bigger final drop",
+    "lyrics": "Almost no lyrics; the chopped vocal hints at a night that feels endless.",
+    "listen_when": "parties, dancing, pregaming, high-energy workouts",
+    "skip_when": "you want acoustic, calm or lyric-driven music",
+    "tip": "The most euphoric track in the catalog and one of the least acoustic (acousticness 0.04)."
+  },
+  "Island Postcard": {
+    "sound": "off-beat guitar skank, warm bass line, organ bubble, hand percussion, melodica",
+    "vocals": "easygoing male vocal with call-and-response backing vocals",
+    "structure": "a relaxed groove that stays steady through two verses, a sing-along chorus, and a melodica solo",
+    "lyrics": "Postcards from a beach town where nobody is in a hurry.",
+    "listen_when": "beach days, lazy Sundays, cooking, relaxed hangouts, summer",
+    "skip_when": "you want intensity or very low energy for sleep",
+    "tip": "The only reggae song in the catalog and the closest match for reggaeton or Latin requests."
+  },
+  "Paper Boats": {
+    "sound": "fingerpicked acoustic guitar, soft cello, light piano in the last chorus",
+    "vocals": "fragile, close-miked female vocal",
+    "structure": "a quiet guitar intro, three verses that grow slightly fuller, and a whispered final line",
+    "lyrics": "Letting someone go, like folding paper boats and watching them drift away.",
+    "listen_when": "heartbreak, rainy days, quiet reflection, sad moods",
+    "skip_when": "you need to feel better quickly or want energy",
+    "tip": "One of the saddest and most acoustic songs in the catalog (acousticness 0.91)."
+  },
+  "Crossroads Blue": {
+    "sound": "crying electric lead guitar, Hammond organ, walking bass, slow shuffle drums, harmonica",
+    "vocals": "weary, soulful male blues vocal",
+    "structure": "a twelve-bar blues form: three verses, a long guitar solo, and a final verse",
+    "lyrics": "Standing at a crossroads after losing everything and deciding which way to go.",
+    "listen_when": "heartbreak, late nights, sad but soulful moods, slow evenings",
+    "skip_when": "you want upbeat or high-energy music",
+    "tip": "Sadder than most songs in the catalog but with more groove than the folk ballads."
+  },
+  "Starlight Sprint": {
+    "sound": "glossy synths, punchy electronic drums, sliding synth bass, a dance-break beat switch, layered group vocals",
+    "vocals": "group vocals with rapid-fire rap verses and a soaring sung chorus",
+    "structure": "a cold-open chorus, fast verses, a pre-chorus build, the chorus, a dance break, and a key-change final chorus",
+    "lyrics": "Racing toward a dream under the stars, with friends cheering you on.",
+    "listen_when": "parties, dancing, workouts, road trips, any time you want maximum upbeat energy",
+    "skip_when": "you need calm, focus or acoustic music",
+    "tip": "Very happy and very high energy at the same time, a combination few other songs in the catalog have."
+  }
+}
