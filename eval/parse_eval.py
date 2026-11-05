@@ -43,22 +43,31 @@ def normalize(raw: Dict, kb: KnowledgeBase, catalog_genres, catalog_moods) -> Di
     return {f: prefs.get(f) for f in FIELDS}
 
 
-def score(name: str, parse: Callable[[str], Dict], cases: List[Dict], kb, catalog_genres, catalog_moods):
+def score(name: str, parse: Callable[[str], Dict], cases: List[Dict], kb, catalog_genres, catalog_moods,
+          client=None):
+    """Score one parser. API calls that fail after retries are skipped, not counted as wrong."""
     per_field = {f: 0 for f in FIELDS}
     exact = 0
     misses = []
+    skipped = []
     for case in cases:
-        predicted = normalize(parse(case["request"]), kb, catalog_genres, catalog_moods)
+        failures_before = client.failures if client else 0
+        raw = parse(case["request"])
+        if client and client.failures > failures_before:
+            skipped.append(case["request"])
+            continue
+        predicted = normalize(raw, kb, catalog_genres, catalog_moods)
         wrong = [f for f in FIELDS if not field_correct(f, predicted[f], case["expected"][f])]
         for f in FIELDS:
             per_field[f] += f not in wrong
         exact += not wrong
         if wrong:
             misses.append((case["request"], {f: (predicted[f], case["expected"][f]) for f in wrong}))
-    n = len(cases)
+    n = max(1, len(cases) - len(skipped))
     field_acc = sum(per_field.values()) / (n * len(FIELDS))
     return {"name": name, "per_field": {f: per_field[f] / n for f in FIELDS},
-            "field_acc": field_acc, "exact": exact / n, "misses": misses}
+            "field_acc": field_acc, "exact": exact / n, "misses": misses,
+            "scored": len(cases) - len(skipped), "skipped": skipped}
 
 
 def main(argv=None) -> int:
@@ -76,11 +85,12 @@ def main(argv=None) -> int:
     catalog_moods = {s["mood"] for s in songs}
     cases = load_examples("test")
 
+    client = None
     parsers = [("rules (baseline)", lambda text: parse_with_rules(text, kb))]
     if args.llm:
         from dotenv import load_dotenv
         load_dotenv(HERE.parent / ".env")
-        client = make_client()
+        client = make_client(min_interval=4.2)   # stay under the free tier's 15 requests/minute
         if client is None:
             print("GEMINI_API_KEY not available; cannot run --llm.")
             return 2
@@ -89,13 +99,17 @@ def main(argv=None) -> int:
             ("gemini few-shot", lambda t: parse_with_llm(t, kb, catalog_moods, client, few_shot=True)),
         ]
 
-    results = [score(name, fn, cases, kb, catalog_genres, catalog_moods) for name, fn in parsers]
+    client_for = {"gemini zero-shot": client, "gemini few-shot": client}
+    results = []
+    for name, fn in parsers:
+        print(f"Scoring {name}...", flush=True)
+        results.append(score(name, fn, cases, kb, catalog_genres, catalog_moods, client_for.get(name)))
 
-    header = "| Parser | " + " | ".join(FIELDS) + " | Field accuracy | Exact match |"
-    rows = [header, "|" + " --- |" * (len(FIELDS) + 3)]
+    header = "| Parser | " + " | ".join(FIELDS) + " | Field accuracy | Exact match | Scored |"
+    rows = [header, "|" + " --- |" * (len(FIELDS) + 4)]
     for r in results:
         rows.append(f"| {r['name']} | " + " | ".join(f"{r['per_field'][f]:.0%}" for f in FIELDS)
-                    + f" | {r['field_acc']:.0%} | {r['exact']:.0%} |")
+                    + f" | {r['field_acc']:.0%} | {r['exact']:.0%} | {r['scored']}/{len(cases)} |")
     print(f"Parse accuracy on {len(cases)} held-out requests\n")
     print("\n".join(rows))
 
@@ -110,6 +124,7 @@ def main(argv=None) -> int:
     for r in results:
         body.append(f"## Misses: {r['name']}")
         body += [f"- `{request}`: {wrong}" for request, wrong in r["misses"]] or ["- none"]
+        body += [f"- `{request}`: skipped (API call failed after retries)" for request in r["skipped"]]
         body.append("")
     out.write_text("\n".join(body), encoding="utf-8")
     print(f"\nTable written to {out.relative_to(HERE.parent)}")

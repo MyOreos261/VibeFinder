@@ -161,3 +161,39 @@ def test_agent_reports_which_parse_prompt_was_used():
     client = FakeClient({"genre": "rock"}, None, None)
     result = VibeFinderAgent(client=client, few_shot=False).run("rock")
     assert result.parser_source == "llm-zero-shot"
+
+
+# ---------------------------------------------------------------- LLM retry / backoff
+def _offline_gemini(responses, monkeypatch):
+    """Build a GeminiClient around a fake API, without a key or network."""
+    import src.llm as llm
+
+    monkeypatch.setattr(llm.time, "sleep", lambda seconds: None)
+    client = llm.GeminiClient.__new__(llm.GeminiClient)
+    client.model, client.min_interval, client.max_retries = "fake", 0.0, 3
+    client.calls = client.failures = 0
+    client._last_call = 0.0
+
+    class FakeModels:
+        def generate_content(self, **kwargs):
+            item = responses.pop(0)
+            if isinstance(item, Exception):
+                raise item
+            return type("Resp", (), {"text": item})()
+
+    client.client = type("Api", (), {"models": FakeModels()})()
+    return client
+
+
+def test_gemini_client_retries_rate_limit_then_succeeds(monkeypatch):
+    responses = [RuntimeError("429 RESOURCE_EXHAUSTED. Please retry in 1.5s."),
+                 RuntimeError("503 UNAVAILABLE"), '{"genre": "rock"}']
+    client = _offline_gemini(responses, monkeypatch)
+    assert client.generate_json("prompt") == {"genre": "rock"}
+    assert (client.calls, client.failures) == (1, 0)
+
+
+def test_gemini_client_gives_up_on_non_retryable_error(monkeypatch):
+    client = _offline_gemini([RuntimeError("400 INVALID_ARGUMENT")], monkeypatch)
+    assert client.generate_json("prompt") is None
+    assert client.failures == 1

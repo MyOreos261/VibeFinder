@@ -65,7 +65,7 @@ def main(argv=None) -> int:
     if args.llm:
         from dotenv import load_dotenv
         load_dotenv(HERE.parent / ".env")
-        client = make_client()
+        client = make_client(min_interval=4.2)   # stay under 15 requests/minute
         if client is None:
             print("GEMINI_API_KEY not available; cannot run --llm evaluation.")
             return 2
@@ -95,7 +95,8 @@ def main(argv=None) -> int:
     summary = (f"{passed}/{len(CASES)} passed; average confidence {avg_conf:.2f} "
                f"over {len(confidences)} answered requests")
     if args.llm:
-        summary += f"; {llm_explanations} LLM explanations passed verification"
+        summary += (f"; {llm_explanations} LLM explanations passed verification; "
+                    f"{client.calls} API calls, {client.failures} failed after retries")
     print(f"\nSummary: {summary}")
 
     table = ["| Request | Check | Status | Confidence | Top song | Result |",
