@@ -31,6 +31,8 @@ SONGS_CSV = Path(__file__).resolve().parent.parent / "data" / "songs.csv"
 CONFIDENCE_THRESHOLD = 0.5
 RELATED_GENRE_SHARE = 0.5   # related genre earns half of the genre weight
 RELATED_MOOD_SHARE = 0.5    # mood in the same family earns half of the mood weight
+SOUND_BONUS = 0.5           # per requested sound the song guide confirms ("piano", "fiddle", ...)
+SOUND_BONUS_MAX = 1.0
 
 
 @dataclass
@@ -77,11 +79,23 @@ class VibeFinderAgent:
         result.parser_source = "rules"
         return parse_with_rules(request, self.kb)
 
-    def _augment(self, prefs: Dict, notes: List[Note]) -> Tuple[Dict, List[str], List[str]]:
+    def _augment(self, prefs: Dict, notes: List[Note],
+                 song_ref: Optional[Note] = None) -> Tuple[Dict, List[str], List[str]]:
         """Use retrieved notes to fill gaps and find related genres. Returns (prefs, related, filled)."""
         prefs = dict(prefs)
         related: List[str] = []
         filled: List[str] = []
+        # A named song ("songs like Storm Runner") is the most specific evidence, so it fills gaps first.
+        if song_ref is not None:
+            ref = next((s for s in self.songs if s["title"].lower() == song_ref.name), None)
+            if ref is not None:
+                values = {"genre": ref["genre"], "mood": ref["mood"], "energy": ref["energy"]}
+                if ref["acousticness"] >= 0.6 or ref["acousticness"] <= 0.3:
+                    values["likes_acoustic"] = ref["acousticness"] >= 0.6
+                for key, value in values.items():
+                    if key not in prefs:
+                        prefs[key] = value
+                        filled.append(f"{key}={value} (from {song_ref.source} > {song_ref.name})")
         genre_note = self.kb.genres.get(prefs.get("genre", ""))
         if genre_note:
             related += genre_note.related
@@ -103,11 +117,20 @@ class VibeFinderAgent:
         related = [g for g in dict.fromkeys(related) if g != prefs.get("genre")]
         return prefs, related, filled
 
-    def _rank(self, prefs: Dict, related: List[str]) -> List[Dict]:
+    def _rank(self, prefs: Dict, related: List[str], sound: Optional[Dict[str, List[str]]] = None,
+              exclude: Optional[str] = None) -> List[Dict]:
         w = DEFAULT_WEIGHTS
+        sound = sound or {}
         scored = []
         for song in self.songs:
+            if exclude and song["title"].lower() == exclude:
+                continue   # "songs like X" should not return X itself
             score, reasons = score_song(prefs, song)
+            terms = sound.get(song["title"].lower())
+            if terms:
+                bonus = min(SOUND_BONUS_MAX, SOUND_BONUS * len(terms))
+                score += bonus
+                reasons.append(f"sound match: {', '.join(terms)} (from song_guide.pdf) (+{bonus:.2f})")
             if song["genre"] in related:
                 bonus = w["genre"] * RELATED_GENRE_SHARE
                 score += bonus
@@ -122,7 +145,7 @@ class VibeFinderAgent:
         scored.sort(key=lambda r: (-r["score"], r["song"]["title"]))
         return scored[: self.k]
 
-    def _confidence(self, prefs: Dict, recs: List[Dict]) -> float:
+    def _confidence(self, prefs: Dict, recs: List[Dict], sound_requested: bool = False) -> float:
         """
         0.4 * coverage (how many of genre / mood / energy we know)
       + 0.6 * fit      (top score / best score possible for these prefs)
@@ -131,7 +154,8 @@ class VibeFinderAgent:
         coverage = sum(1 for key in ("genre", "mood", "energy") if key in prefs) / 3
         max_score = ((w["genre"] if "genre" in prefs else 0) + (w["mood"] if "mood" in prefs else 0)
                      + (w["energy"] if "energy" in prefs else 0)
-                     + (w["acoustic"] if "likes_acoustic" in prefs else 0))
+                     + (w["acoustic"] if "likes_acoustic" in prefs else 0)
+                     + (SOUND_BONUS_MAX if sound_requested else 0))
         fit = min(1.0, recs[0]["score"] / max_score) if recs and max_score else 0.0
         return round(0.4 * coverage + 0.6 * fit, 2)
 
@@ -195,16 +219,26 @@ Rules:
         # 4 + 5. retrieve and augment (skipped in baseline mode)
         notes: List[Note] = []
         related: List[str] = []
+        song_ref: Optional[Note] = None
+        sound: Dict[str, List[str]] = {}
         if self.use_rag:
             notes = self.kb.retrieve(request, genre=prefs.get("genre"), activity=prefs.get("activity"))
+            song_ref = self.kb.find_song_reference(request)
+            sound = self.kb.sound_matches(request)
             result.notes = [f"{n.source} > {n.name}" for n in notes]
-            self._log(result, "retrieve", notes=result.notes)
-            prefs, related, filled = self._augment(prefs, notes)
+            if song_ref is not None:
+                result.notes.append(f"{song_ref.source} > {song_ref.name}")
+            if sound:
+                terms = sorted({t for ts in sound.values() for t in ts})
+                result.notes.append(f"song_guide.pdf > sound matches for {', '.join(terms)} ({len(sound)} songs)")
+            self._log(result, "retrieve", notes=result.notes,
+                      song_reference=song_ref.name if song_ref else None, sound_matches=sound)
+            prefs, related, filled = self._augment(prefs, notes, song_ref)
             self._log(result, "augment", filled_from_notes=filled, related_genres=related)
         result.prefs = prefs
 
         scoring_prefs = {k: v for k, v in prefs.items() if k in ("genre", "mood", "energy", "likes_acoustic")}
-        if not scoring_prefs:
+        if not scoring_prefs and not sound:
             result.status = "needs_clarification"
             result.message = ("I couldn't find a genre, mood, energy level, or activity in that request. "
                               "Try something like 'upbeat pop for a road trip'.")
@@ -212,12 +246,12 @@ Rules:
             return result
 
         # 6. rank
-        recs = self._rank(scoring_prefs, related)
+        recs = self._rank(scoring_prefs, related, sound, exclude=song_ref.name if song_ref else None)
         result.recommendations = recs
         self._log(result, "rank", top=[(r["song"]["title"], r["score"]) for r in recs])
 
         # 7. confidence + human-in-the-loop flag
-        result.confidence = self._confidence(scoring_prefs, recs)
+        result.confidence = self._confidence(scoring_prefs, recs, sound_requested=bool(sound))
         if result.confidence < CONFIDENCE_THRESHOLD:
             result.status = "needs_clarification"
             missing = [k for k in ("genre", "mood", "energy") if k not in scoring_prefs]
@@ -227,12 +261,15 @@ Rules:
 
         # 8 + 9. explain and verify
         titles = [r["song"]["title"] for r in recs]
+        # Ground the explanation in the song guide's details for every recommended song.
+        context_notes = list(notes) + ([song_ref] if song_ref else []) + [
+            self.kb.songs[t.lower()] for t in titles if self.use_rag and t.lower() in self.kb.songs]
         explanation, source = None, "template"
         if self.client is not None:
             feedback = ""
             for attempt in (1, 2):
                 candidate = self.client.generate_json(
-                    self._explain_prompt(request, scoring_prefs, recs, notes, feedback), temperature=0.4)
+                    self._explain_prompt(request, scoring_prefs, recs, context_notes, feedback), temperature=0.4)
                 problems = verify_explanation(candidate, titles)
                 self._log(result, "verify", attempt=attempt, passed=not problems, problems=problems)
                 if not problems:

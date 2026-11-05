@@ -246,6 +246,13 @@ def main() -> None:
                                 activity=result.prefs.get("activity")) if use_rag else []
             for note in notes:
                 st.markdown(f"- **{note.source} › {note.name}**: {note.text}")
+            if use_rag:
+                ref = kb.find_song_reference(request)
+                if ref is not None:
+                    st.markdown(f"- **{ref.source} › {ref.name}** (song you named): {ref.text}")
+                for name, terms in kb.sound_matches(request).items():
+                    st.markdown(f"- **song_guide.pdf › {name}**: sound match for *{', '.join(terms)}*: "
+                                f"{kb.songs[name].fields.get('sound', '')}")
         st.markdown("**Agent trace**")
         for i, step in enumerate(result.trace, start=1):
             details = {k: v for k, v in step.items() if k != "step"}
