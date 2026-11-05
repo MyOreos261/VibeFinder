@@ -197,3 +197,54 @@ def test_gemini_client_gives_up_on_non_retryable_error(monkeypatch):
     client = _offline_gemini([RuntimeError("400 INVALID_ARGUMENT")], monkeypatch)
     assert client.generate_json("prompt") is None
     assert client.failures == 1
+
+
+# ---------------------------------------------------------------- song guide (PDF) retrieval
+def test_song_guide_pdf_and_txt_parse_to_the_same_20_songs(tmp_path):
+    from pathlib import Path
+    from src.knowledge import KNOWLEDGE_DIR, load_song_guide
+
+    pdf_notes = load_song_guide(KNOWLEDGE_DIR / "song_guide.pdf")
+    # TXT fallback: point at a folder that has only the .txt export.
+    (tmp_path / "song_guide.txt").write_text((KNOWLEDGE_DIR / "song_guide.txt").read_text(encoding="utf-8"),
+                                             encoding="utf-8")
+    txt_notes = load_song_guide(Path(tmp_path) / "song_guide.pdf")
+    assert len(pdf_notes) == len(txt_notes) == 20
+    assert [n.fields for n in pdf_notes] == [n.fields for n in txt_notes]
+    assert "fiddle" in {n.name: n for n in pdf_notes}["dusty porch swing"].fields["sound"]
+
+
+def test_songs_like_x_uses_the_guide_and_excludes_x():
+    result = VibeFinderAgent().run("songs like Storm Runner")
+    titles = [r["song"]["title"] for r in result.recommendations]
+    assert "Storm Runner" not in titles
+    assert result.prefs["genre"] == "rock" and result.prefs["mood"] == "intense"
+    assert any("song_guide.pdf > storm runner" in n for n in result.notes)
+
+
+def test_sound_words_match_the_guide():
+    result = VibeFinderAgent().run("instrumental piano music")
+    top = result.recommendations[0]
+    assert top["song"]["title"] == "Moonlit Sonata Redux"
+    assert any("sound match: instrumental, piano" in r for r in top["reasons"])
+
+
+def test_song_title_words_are_not_sound_requests(kb):
+    from src.knowledge import KnowledgeBase
+
+    full = KnowledgeBase.load()
+    assert full.sound_matches("more like Library Rain") == {}
+    assert "library rain" in full.sound_matches("music with rain sounds")
+
+
+def test_missing_song_guide_degrades_gracefully(tmp_path):
+    from src.knowledge import load_song_guide
+
+    assert load_song_guide(tmp_path / "song_guide.pdf") == []
+
+
+def test_song_guide_pdf_is_between_20_and_25_mb():
+    from src.knowledge import KNOWLEDGE_DIR
+
+    size = (KNOWLEDGE_DIR / "song_guide.pdf").stat().st_size
+    assert 20 * 1024 * 1024 <= size <= 25 * 1000 * 1000, f"{size / 1e6:.1f} MB"

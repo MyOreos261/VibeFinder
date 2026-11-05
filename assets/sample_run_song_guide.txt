@@ -1,0 +1,33 @@
+Request: songs like Storm Runner
+Parsed (rules): genre=rock, mood=intense, energy=0.91, likes_acoustic=False
+Retrieved notes: song_guide.pdf > storm runner
+Confidence: 0.81
+
+Top 5 matches for "songs like Storm Runner" from the catalog.  (explanation: template)
+1. Iron Tempest by Graveforge  [metal/angry, energy 0.97]  score 3.40
+   energy 0.97 vs target 0.91 (+1.41); produced/electronic sound fit (+0.48); related genre: metal (from knowledge notes) (+1.00)
+2. Gym Hero by Max Pulse  [pop/intense, energy 0.93]  score 2.94
+   mood match: intense (+1.00); energy 0.93 vs target 0.91 (+1.47); produced/electronic sound fit (+0.47)
+3. Crossroads Blue by Eddie Lark  [blues/sad, energy 0.45]  score 2.00
+   energy 0.45 vs target 0.91 (+0.81); produced/electronic sound fit (+0.19); related genre: blues (from knowledge notes) (+1.00)
+4. Laser Bloom by Pulse Theory  [edm/euphoric, energy 0.95]  score 1.92
+   energy 0.95 vs target 0.91 (+1.44); produced/electronic sound fit (+0.48)
+5. Starlight Sprint by NOVA9  [k-pop/happy, energy 0.88]  score 1.91
+   energy 0.88 vs target 0.91 (+1.46); produced/electronic sound fit (+0.45)
+
+Request: instrumental piano music
+Parsed (rules): genre=classical
+Retrieved notes: genres.md > classical, song_guide.pdf > sound matches for instrumental, piano (9 songs)
+Confidence: 0.73
+
+Top 5 matches for "instrumental piano music" from the catalog.  (explanation: template)
+1. Moonlit Sonata Redux by Clara Vey  [classical/melancholy, energy 0.22]  score 3.00
+   genre match: classical (+2.00); sound match: instrumental, piano (from song_guide.pdf) (+1.00)
+2. Spacewalk Thoughts by Orbit Bloom  [ambient/chill, energy 0.28]  score 2.00
+   sound match: instrumental, piano (from song_guide.pdf) (+1.00); related genre: ambient (from knowledge notes) (+1.00)
+3. Coffee Shop Stories by Slow Stereo  [jazz/relaxed, energy 0.37]  score 1.00
+   sound match: instrumental, piano (from song_guide.pdf) (+1.00)
+4. Focus Flow by LoRoom  [lofi/focused, energy 0.40]  score 1.00
+   sound match: instrumental, piano (from song_guide.pdf) (+1.00)
+5. Midnight Coding by LoRoom  [lofi/chill, energy 0.42]  score 1.00
+   sound match: instrumental, piano (from song_guide.pdf) (+1.00)
