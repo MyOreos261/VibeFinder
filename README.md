@@ -299,9 +299,9 @@ Summary: 15/15 passed; average confidence 0.84 over 11 answered requests
 
 ## Reflection
 
-<!-- Draft: rewrite this in your own voice. -->
+This project taught me that a working AI system is mostly about everything *around* the model. Gemini is only used to understand requests and explain picks. Most of the work was making sure the system behaves well when the AI is wrong, slow or unavailable: guardrails, a verifier that checks every song it mentions, a confidence score that asks me to clarify, and an offline mode for when the API fails.
 
-The big lesson was where to put the AI. My first instinct was to let the LLM pick the songs. Keeping the deterministic scorer in charge, and using the LLM only for the fuzzy parts (understanding the request, writing the explanation), made the system easier to trust and much easier to test. Retrieval turned out to be less about facts and more about context: the notes let the system act sensibly on what the user *didn't* say.
+I also learned to trust measurements over impressions. Few-shot examples looked like a small tweak, but they took parsing accuracy from 67% to 88%. Meanwhile a fix that looked obviously good, related-genre credit, quietly created a new bias. I only saw both because I had tests and an evaluation script to compare against. My full reflection on limitations, misuse, and how I worked with AI is in [model_card.md](model_card.md).
 
 ## What this project says about me as an AI engineer
 

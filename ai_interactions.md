@@ -109,7 +109,8 @@ I used Claude Code (the desktop app's Code tab) as an agent to build the core pr
 - **Starter bug:** the starter `main.py` used `from recommender import ...`, which crashes when run as `python -m src.main`. It was changed to `from src.recommender import ...`.
 - **Pasted output matches a real run:** the agent diffed the code blocks in `model_card.md` against a fresh run of `python -m src.main`; they matched exactly. It also corrected a wrong count in the README (it first said 16 genres; the catalog has 17, and 15 of them have only one song).
 - **Push only after review:** the agent committed locally and asked before pushing to my public repo. I read the summary first, then told it to push.
-- **Still on me:** the personal reflection in `model_card.md` and `README.md` started as an AI draft, so I need to rewrite it in my own words. I also need to spot-check the scoring math for one song myself (e.g., Sunrise City for the pop profile: 2.00 + 1.00 + 1.5 × (1 − 0.02) + 0.5 × (1 − 0.18) = 4.88).
+- **Still on me (Module 3):** the personal reflection started as an AI draft, and I needed to spot-check the scoring math for one song (e.g., Sunrise City for the pop profile: 2.00 + 1.00 + 1.5 × (1 − 0.02) + 0.5 × (1 − 0.18) = 4.88).
+- **Update (final project):** the final project's reflection sections (README "Reflection", and model card "What Surprised Me" and "Collaboration with AI") were rewritten from my own answers about what surprised me, which AI suggestion I accepted, and which I didn't accept as written.
 
 ---
 

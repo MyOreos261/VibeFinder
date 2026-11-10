@@ -62,21 +62,20 @@ Without retrieval, the system fails "music for sleeping" (nothing to parse), "po
 
 ## 6. What Surprised Me
 
-<!-- Draft: rewrite in your own words. -->
+A few things surprised me while I was testing:
 
-- **Retrieval mattered more for what users *left out* than for what they said.** The biggest gain was activity-only requests ("music for sleeping"), which went from "I don't understand" to a sensible list.
-- **Fixing one bias created another.** Related-genre credit fixed the Module 3 problem where `indie pop` got no credit for a pop fan, but it also pushed a slow blues song into a gym playlist.
-- **The most useful guardrail check was the boring one.** "Is every title in the retrieved list?" is a one-line set check, and it catches the most serious failure an LLM can make here: recommending a song that doesn't exist.
+- **Fixing one bias made a new one.** In Module 3, a pop fan got no credit for `indie pop` or `k-pop` because genres had to match exactly. Giving related genres partial credit fixed that, but then a slow blues song (Crossroads Blue, energy 0.45) started showing up in gym playlists because the rock notes list blues as related. I expected a fix to just be a fix.
+- **Few-shot examples helped a lot, but didn't win.** Showing Gemini 8 labeled examples raised its parsing accuracy from 67% to 88%. Without them it kept guessing energy and acoustic preference from the activity. Even so, my simple rule-based parser still scored 94%. A bigger model isn't automatically better than a few rules written for the job.
+- **RAG mattered most for what I *didn't* say.** I thought retrieval would mostly add facts. The biggest change was requests like "music for sleeping": without the notes, the system had nothing to work with and asked me to clarify. With them, it filled in a chill mood and low energy on its own.
+- **Real APIs fail in ordinary ways.** My first Gemini evaluation hit the free tier's 15-requests-per-minute limit and "model overloaded" errors. Those failed calls were scored as wrong answers, which made the AI look much worse than it was. I had to add retries and count failed calls separately before the numbers meant anything.
 
 ## 7. Collaboration with AI
 
-<!-- Draft from the build session: edit so it reflects your own experience. -->
+I built this project with Claude Code as an AI coding partner. I chose the base project (my Module 3 Music Recommender) and decided what to add: the web app, the few-shot stretch feature, and the song guide. I also ran the apps myself and asked for changes. The AI proposed the design, wrote most of the code and docs, and ran the tests and evaluations.
 
-I built this with Claude Code. I gave it the assignment and picked the base project. It proposed the design, wrote the code, and ran the tests and evaluation.
-
-- **Suggestion I accepted:** keep a deterministic rule-based parser and template explanations as a fallback whenever Gemini is unavailable or fails verification. This made the project reproducible for graders without an API key, and it made it possible to test the whole pipeline without network calls.
-- **Suggestion I changed:** the first version of the genre knowledge base listed `electronic` as an alias for EDM. That conflicted with the parser, which already treats "electronic" as "doesn't like acoustic", so "electronic music for studying" would have forced the genre to EDM. We removed the alias so the word only sets the acoustic preference.
-- **What I checked myself:** that each guardrail rejects what it should (the eval cases), and that the related-genre bonus behaves sensibly. That review is how I found the blues-in-the-gym bias above.
+- **A suggestion I accepted: offline fallback mode.** The AI suggested keeping a rule-based parser and template explanations so the app still works when Gemini isn't available. I accepted it because for most of the project I didn't have my API key set up, and this meant I could still run, test and demo everything. It also means graders can reproduce my results without a key, and the tests never depend on the internet. It turned out to matter even after I added the key, because Gemini's rate limits sometimes made calls fail, and the app falls back instead of crashing.
+- **A suggestion I didn't accept as written: the size of the song guide.** The AI first built the song guide PDF at about 60 KB. When I said it needed to be at least 20 MB, it argued against padding it with filler text, because that would bury the real content and make retrieval worse. I didn't accept the small file, since I needed at least 20 MB, but I agreed that filler text was the wrong way to get there. We changed the plan: each song got a generated cover image (color from mood, rings from energy). The images are placed outside the song text sections, so the PDF reached 23 MB while retrieval reads exactly the same text as before.
+- **What I checked myself:** I ran the terminal and web apps, tried requests like "give me some reggaeton" to see the low-confidence clarification happen, and switched RAG on and off to see the difference. At one point my real API key ended up in `.env.example`, a file that goes to my public repo. The AI flagged it, and I had the placeholder restored before anything was committed, which taught me to keep secrets only in `.env`.
 
 ## 8. Future Work
 
