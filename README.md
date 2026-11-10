@@ -303,7 +303,9 @@ Summary: 15/15 passed; average confidence 0.84 over 11 answered requests
 
 The big lesson was where to put the AI. My first instinct was to let the LLM pick the songs. Keeping the deterministic scorer in charge, and using the LLM only for the fuzzy parts (understanding the request, writing the explanation), made the system easier to trust and much easier to test. Retrieval turned out to be less about facts and more about context: the notes let the system act sensibly on what the user *didn't* say.
 
-**What this project says about me as an AI engineer:** <!-- TODO: your portfolio paragraph -->
+## What this project says about me as an AI engineer: <!-- TODO: your portfolio paragraph -->
+
+This project shows that I care about building AI systems people can trust, not just ones that look impressive in a demo. I turned a simple song-scoring script into an agent that retrieves knowledge, rates its own confidence, asks for clarification when it’s unsure, and checks the language model’s answers before showing them. I learned to measure instead of assume: my evaluation harness and few-shot experiment showed exactly where the AI helped (88% vs. 67% parsing accuracy) and where my own rules still did better. I also learned to use AI tools as a collaborator while staying in charge of the decisions: I reviewed what was built, questioned results, and documented the system’s limits honestly.
 
 ## Demo Video
 
