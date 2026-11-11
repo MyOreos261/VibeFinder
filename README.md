@@ -307,9 +307,6 @@ I also learned to trust measurements over impressions. Few-shot examples looked 
 
 This project shows that I care about building AI systems people can trust, not just ones that look impressive in a demo. I turned a simple song-scoring script into an agent that retrieves knowledge, rates its own confidence, asks for clarification when it’s unsure, and checks the language model’s answers before showing them. I learned to measure instead of assume: my evaluation harness and few-shot experiment showed exactly where the AI helped (88% vs. 67% parsing accuracy) and where my own rules still did better. I also learned to use AI tools as a collaborator while staying in charge of the decisions: I reviewed what was built, questioned results, and documented the system’s limits honestly.
 
-## Demo Video
-
-<!-- Optional: add your Loom link here -->
 
 ## Repository Layout
 
